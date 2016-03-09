@@ -11,170 +11,170 @@ abstract
                                               ⇒ (Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ [])
   case8 {Cr} {T} {U} {St} {d₁} {C} {P} {Pd} = seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                   {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                  {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                  {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               (whilef tt)
                                               (whilet {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                      {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                      {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                      {env₂ = result}
+                                                      {env₃ = result}
                                               tt
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                   {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                  {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                  {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               (whilef tt)
                                               (whilet {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                      {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                      {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                      {env₂ = result}
+                                                      {env₃ = result}
                                               tt
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                   {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                  {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                  {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               (whilef tt)
                                               (whilet {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                      {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                      {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                      {env₂ = result}
+                                                      {env₃ = result}
                                               tt
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                   {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                  {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                  {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               (whilef tt)
                                               (whilet {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                      {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                      {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                      {env₂ = result}
+                                                      {env₃ = result}
                                               tt
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                   {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                  {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                  {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               (whilef tt)
                                               (whilet {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                      {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                      {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                      {env₂ = result}
+                                                      {env₃ = result}
                                               tt
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                   {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                  {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                  {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               (whilef tt)
                                               (whilet {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                      {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                      {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                      {env₂ = result}
+                                                      {env₃ = result}
                                               tt
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                   {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                  {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                  {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               (whilef tt)
                                               (whilet {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                      {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                      {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                      {env₂ = result}
+                                                      {env₃ = result}
                                               tt
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∙ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∙ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∙ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∙ dnil ∷ []}
-                                                   {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₂ = result}
+                                                   {env₃ = result}
                                               (whilet {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∙ dnil ∷ []}
-                                                      {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                      {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                      {env₂ = result}
+                                                      {env₃ = result}
                                               tt
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∙ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∙ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               (seq {env₁ = Pd ∷ P ∷ C ∷ docons ∙ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
                                                    {env₂ = Pd ∷ P ∷ C ∷ Cr ∷ U ∙ (T ∙ St) ∷ d₁ ∷ dnil ∷ dnil ∷ []}
-                                                   {env₃ = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []}
+                                                   {env₃ = result}
                                               assign
                                               assign)))
                                               (whilef tt))
@@ -185,4 +185,7 @@ abstract
                                               (whilef tt))))))
                                               (whilef tt))))))
                                               (whilef tt))))))
-                                              (whilef tt)))) 
+                                              (whilef tt))))
+                                              where
+                                                result : Vec D 8
+                                                result = Pd ∷ P ∷ C ∷ Cr ∷ (T ∙ U) ∙ St ∷ d₁ ∷ dnil ∷ dnil ∷ []

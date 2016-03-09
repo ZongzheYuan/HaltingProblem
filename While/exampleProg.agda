@@ -60,31 +60,31 @@ runAppend = terminate zero (suc zero) {env = list1 ∙ list2 ∷ list3 ∷ dnil 
                 (seq {env₁ = list1 ∙ list2 ∷ list2 ∷ list1 ∷ dnil ∷ []}
                   assign
                   (seq {env₁ = list1 ∙ list2 ∷ list2 ∷ list1 ∷ dnil ∷ []}
-                       {env₂ = list1 ∙ list2 ∷ list2 ∷ dnil ∷ ltod (3 ∷ 2 ∷ 1 ∷ []) ∷ []}
+                       {env₂ = result}
                        {env₃ =  list1 ∙ list2 ∷ list3 ∷ dnil ∷ dnil ∷ []}
                     (whilet {env₁ =  list1 ∙ list2 ∷ list2 ∷ list1 ∷ dnil ∷ []}
                             {env₂ = list1 ∙ list2 ∷ list2 ∷ dsnd list1 ∷ dfst list1 ∙ dnil ∷ []}
-                            {env₃ = list1 ∙ list2 ∷ list2 ∷ dnil ∷ ltod (3 ∷ 2 ∷ 1 ∷ []) ∷ []}
+                            {env₃ = result}
                       _ 
                      (seq 
                        assign
                        assign)
                      (whilet {env₁ = list1 ∙ list2 ∷ list2 ∷ dsnd list1 ∷ dfst list1 ∙ dnil ∷ []}
                              {env₂ = list1 ∙ list2 ∷ list2 ∷ dsnd (dsnd list1) ∷ dfst (dsnd list1) ∙ (dfst list1 ∙ dnil) ∷ []}
-                             {env₃ = list1 ∙ list2 ∷ list2 ∷ dnil ∷ ltod (3 ∷ 2 ∷ 1 ∷ []) ∷ []}
+                             {env₃ = result}
                        _
                        (seq
                          assign
                          assign)
                        (whilet {env₁ = list1 ∙ list2 ∷ list2 ∷ dsnd (dsnd list1) ∷ dfst (dsnd list1) ∙ (dfst list1 ∙ dnil) ∷ []}
-                               {env₂ = list1 ∙ list2 ∷ list2 ∷ dnil ∷ ltod (3 ∷ 2 ∷ 1 ∷ []) ∷ []}
-                               {env₃ = list1 ∙ list2 ∷ list2 ∷ dnil ∷ ltod (3 ∷ 2 ∷ 1 ∷ []) ∷ []}
+                               {env₂ = result}
+                               {env₃ = result}
                          _
                          (seq
                            assign
                            assign)
                          (whilef _))))
-                    (whilet {env₁ = list1 ∙ list2 ∷ list2 ∷ dnil ∷ ltod (3 ∷ 2 ∷ 1 ∷ []) ∷ []}
+                    (whilet {env₁ = result}
                             {env₂ = list1 ∙ list2 ∷ const 3 ∙ list2 ∷ dnil ∷ ltod (2 ∷ 1 ∷ []) ∷ []}
                             {env₃ = list1 ∙ list2 ∷ list3 ∷ dnil ∷ dnil ∷ []}
                       _
@@ -106,3 +106,6 @@ runAppend = terminate zero (suc zero) {env = list1 ∙ list2 ∷ list3 ∷ dnil 
                             assign
                             assign)
                           (whilef _))))))))
+                          where
+                            result : Vec D 4
+                            result = list1 ∙ list2 ∷ list2 ∷ dnil ∷ ltod (3 ∷ 2 ∷ 1 ∷ []) ∷ []
