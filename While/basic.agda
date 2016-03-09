@@ -28,6 +28,11 @@ mid < x , y , z > = y
 lst : {A B C : Set} → A × B × C → C
 lst < x , y , z > = z
 
+-- the tree structure of calling
+data CallTree : Set where
+  leaf : CallTree
+  node : CallTree → CallTree → CallTree
+
 -- inspect of data
 data Inspect {A : Set}(x : A) : Set where
   it : (y : A) → x ≡ y → Inspect x
