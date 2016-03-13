@@ -32,7 +32,7 @@ relation c d₁ ._ (terminate .zero .zero x) = c-h* (d₁ ∙ (dsnd (codeP (prog
                                                                                                                                                                                                                                                                                                                                                (getResult-ok x) x)))
 
 -- while true command can't stop under any environment
-loop-c : {t : CallTree}{n : ℕ}{c : C n}{env₁ env₂ : Vec D n} → (p : wt c ⊢ env₁ ⇒ env₂) → loop-ct p ≡ t → ⊥
+loop-c : {t : D}{n : ℕ}{c : C n}{env₁ env₂ : Vec D n} → (p : wt c ⊢ env₁ ⇒ env₂) → loop-ct p ≡ t → ⊥
 loop-c (whilef ()) x₁
-loop-c {leaf} (whilet x p p₁) ()
-loop-c {node .(loop-ct p) .(loop-ct p₁)} (whilet x p p₁) refl = loop-c {loop-ct p₁} p₁ refl
+loop-c {dnil} (whilet x p p₁) ()
+loop-c {.(loop-ct p) ∙ .(loop-ct p₁)} (whilet x p p₁) refl = loop-c {loop-ct p₁} p₁ refl

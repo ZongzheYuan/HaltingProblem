@@ -63,7 +63,6 @@ halt-contradiction : {h : P 1}
                       ×' ((∀ {out : D} → ExecP p inp out → ⊥) → ExecP h (dsnd (codeP p) ∙ inp) dfalse))
                    → ⊥
 halt-contradiction {h} p = exec-U-⊥ (dnil ,' (execP-U-halt {h} (dsnd (codeP U)) dnil (u-loop (λ {out} q → exec-U-⊥ (out ,' q))) refl))
-                         --exec-U-⊥ (execP-U-halt' (u-loop (λ {out} q → exec-U-⊥ (out ,' q))))
   where
     prop = p {8}{U}{(dsnd (codeP h) ∙ dsnd (codeP U))}
     
@@ -75,9 +74,6 @@ halt-contradiction {h} p = exec-U-⊥ (dnil ,' (execP-U-halt {h} (dsnd (codeP U)
 
     exec-U-⊥ : Σ D (ExecP U (dsnd (codeP h) ∙ dsnd (codeP U))) → ⊥
     exec-U-⊥ (d ,' p) = execP-U-loop (dsnd (codeP U)) dtrue (u-halt (d ,' p)) (λ { () }) p
-
-    -- execP-U-halt' : ExecP h (dsnd (codeP U) ∙ (dsnd (codeP h) ∙ dsnd (codeP U))) dfalse → Σ D (ExecP U (dsnd (codeP h) ∙ dsnd (codeP U)))
-    -- execP-U-halt' p = dnil ,' execP-U-halt {h} (dsnd (codeP U)) dnil p refl
 
 
 {- false proof

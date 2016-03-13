@@ -15,7 +15,7 @@ open import Haltingproblem.proof1
 -- the property 1 of program U
 -- the execution of the command in U will loop forever
 -- if the result of the program h under the input is not nil
-execC-U-loop : {t : CallTree}{h : P 1} → (d₁ d₂ : D)
+execC-U-loop : {t : D}{h : P 1} → (d₁ d₂ : D)
              → ExecP h (d₁ ∙ (dsnd (codeP h) ∙ d₁)) d₂
              → (d₂ ≡ dnil → ⊥)
              → ∀ {env : Vec D 8}
@@ -27,8 +27,8 @@ execC-U-loop {t} {prog zero c zero} d₁ ._ (terminate .zero .zero {.c}{env} x) 
 execC-U-loop {t} {prog zero c zero} d₁ ._ (terminate .zero .zero x) q₁ (seq assign (seq assign (seq assign (seq assign (seq assign (seq p₇ (seq assign (seq assign (seq (whilef x₁) p₁₁))))))))) q₂ | refl | dnil = q₁ refl
 execC-U-loop {t} {prog zero c zero} d₁ ._ (terminate .zero .zero x) q₁ (seq assign (seq assign (seq assign (seq assign (seq assign (seq p₇ (seq assign (seq assign (seq (whilef ()) p₁₁))))))))) q₂ | refl | h ∙ h₁
 execC-U-loop {h = prog zero c zero} d₁ ._ (terminate .zero .zero x) q₁ (seq p₂ (seq p₃ (seq p₄ (seq p₅ (seq p₆ (seq p₇ (seq p₈ (seq p₉ (seq (whilet x₁ (seq p₁₀ (seq p₁₁ (whilef ()))) p₁₃) p₁₄))))))))) q₂
-execC-U-loop {leaf} {prog zero c zero} d₁ ._ (terminate .zero .zero x) q₁ (seq p₂ (seq p₃ (seq p₄ (seq p₅ (seq p₆ (seq p₇ (seq p₈ (seq p₉ (seq (whilet x₁ (seq p₁₀ (seq p₁₁ p₁₂)) p₁₄) p₁₅))))))))) ()
-execC-U-loop {node t t₁} {prog zero c zero} d₁ ._ (terminate .zero .zero x) q₁ (seq p₂ (seq p₃ (seq p₄ (seq p₅ (seq p₆ (seq p₇ (seq p₈ (seq p₉ (seq (whilet x₁ (seq p₁₀ (seq p₁₁ p₁₂)) p₁₄) p₁₅))))))))) x₂ = loop-c p₁₂ refl
+execC-U-loop {dnil} {prog zero c zero} d₁ ._ (terminate .zero .zero x) q₁ (seq p₂ (seq p₃ (seq p₄ (seq p₅ (seq p₆ (seq p₇ (seq p₈ (seq p₉ (seq (whilet x₁ (seq p₁₀ (seq p₁₁ p₁₂)) p₁₄) p₁₅))))))))) ()
+execC-U-loop {t ∙ t₁} {prog zero c zero} d₁ ._ (terminate .zero .zero x) q₁ (seq p₂ (seq p₃ (seq p₄ (seq p₅ (seq p₆ (seq p₇ (seq p₈ (seq p₉ (seq (whilet x₁ (seq p₁₀ (seq p₁₁ p₁₂)) p₁₄) p₁₅))))))))) x₂ = loop-c p₁₂ refl
 execC-U-loop {h = prog zero c (suc ())} d₁ d₂ m n p q
 execC-U-loop {h = prog (suc ()) x₁ x₂} d₁ d₂ m n p q
 

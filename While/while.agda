@@ -142,11 +142,11 @@ consist dnil () t
 consist (d₁ ∙ d₂) t ()
 
 -- calculate the loops inside the execution of command
-loop-ct : {n : ℕ}{c : C n}{env₁ env₂ : Vec D n} → c ⊢ env₁ ⇒ env₂ → CallTree
-loop-ct (whilef x) = leaf
-loop-ct (whilet x p p₁) = node (loop-ct p) (loop-ct p₁)
-loop-ct assign = leaf
-loop-ct (seq p p₁) = node (loop-ct p) (loop-ct p₁)
+loop-ct : {n : ℕ}{c : C n}{env₁ env₂ : Vec D n} → c ⊢ env₁ ⇒ env₂ → D
+loop-ct (whilef x) = dnil
+loop-ct (whilet x p p₁) = (loop-ct p) ∙ (loop-ct p₁)
+loop-ct assign = dnil
+loop-ct (seq p p₁) = (loop-ct p) ∙ (loop-ct p₁)
 
 -- proof that exec the same command with same input environment will result same output environment
 ⊢ok : {n : ℕ}{c : C n}{env₁ env₂ env₃ : Vec D n} → c ⊢ env₁ ⇒ env₂ → c  ⊢ env₁ ⇒ env₃ → env₂ ≡ env₃

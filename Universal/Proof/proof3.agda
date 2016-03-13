@@ -18,7 +18,7 @@ open import Universal.Proof.proof2
 -- [c ∙ Cr, St, V1] → [Cr, St, out]
 -- [(C.Cd), St, d] ⇒* [Cd, St, e] iff C ⊢ [X ↦ d] → [X ↦ e]
 
-⇒*proof : {t : CallTree} → (c : C 1) → (d₁ d₂ Cr St : D) → (out : Vec D 1)
+⇒*proof : {t : D} → (c : C 1) → (d₁ d₂ Cr St : D) → (out : Vec D 1)
        → (p : c ⊢ updateE zero d₁ initialVec ⇒ out)
        → dlookup zero out ≡ d₂
        → loop-ct p ≡ t
@@ -52,8 +52,8 @@ open import Universal.Proof.proof2
                                                                       (⇒*e e d₁ dnil (dowh ∙ (codeC (while e c) ∙ Cr)) St (isNil-ok (eval e (d₁ ∷ [])) x))
                                                                       (edowhf (codeE e) (codeC c) Cr St d₁))
 
-⇒*proof {leaf} (while e c) d₁ .(dlookup zero out) Cr St out (whilet x cr₁ cr₂) refl ()
-⇒*proof {node .(loop-ct cr₁) .(loop-ct cr₂)} (while e c) d₁ .(dlookup zero out) Cr St out (whilet x cr₁ cr₂) refl refl = seq (codeC (while e c) ∙ Cr) (codeE e ∙ (dowh ∙ (codeC (while e c) ∙ Cr))) Cr
+⇒*proof {dnil} (while e c) d₁ .(dlookup zero out) Cr St out (whilet x cr₁ cr₂) refl ()
+⇒*proof {.(loop-ct cr₁) ∙ .(loop-ct cr₂)} (while e c) d₁ .(dlookup zero out) Cr St out (whilet x cr₁ cr₂) refl refl = seq (codeC (while e c) ∙ Cr) (codeE e ∙ (dowh ∙ (codeC (while e c) ∙ Cr))) Cr
                                                                                  St                       St                                            St
                                                                                  d₁                       d₁                                            (dlookup zero out)
                                                                                  (ewhile (codeE e) (codeC c) Cr St d₁)
