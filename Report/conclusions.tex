@@ -1,0 +1,158 @@
+\chapter{Evaluation, Summary and Futher Work}
+
+\section{Evaluation to the Project}
+
+\section{Summary and Conclusion}
+
+\section{Future Work}
+\subsection{WHILE Program Variables Transformation}
+The universal \WHILE program defined in \ref{universal-I} could only simulate the \WHILE program that has only one variable.
+Thus the final proof could only say that a machine \wit{h} which has only one variable that could \wit{decide} the \wit{halting problem} is \wit{false}.
+However the \WHILE program that has only one variable (we name it as \textbf{WHILE-I} program) has the same computation ability compare to the \WHILE program that has many variables.
+That means, the number of variable to the \WHILE program doesn't matter, and doesn't violate the property of \wit{Turing-completeness} to the \WHILE program.
+However, because \Agda has strict type, the program must know its variable number before it has been defined.
+Thus, we can construct some rules to transform the \WHILE program to \textbf{WHILE-I} program and prove that they have the same effect, 
+which means for \wit{p} $\in$ \md{P} $n$ and \wit{input}, \wit{output} $\in$ \md{D}, $p(input)$ yielding $output$ implies that $\exists$ $p-I$ $\in$ \md{P} $1$, $p-I(input)$ yielding $output$.\\
+Initially we should transform the \wit{environment} of the program from \textbf{Vec D n} to \textbf{Vec D 1}, which means accumulate all the variables in the first \wit{environment} to the first element in the second \wit{environment} by the operator $\cdot$.
+For example, initially we have \wit{environment} of five variables: (\wit{A :: B :: C :: D :: E ::[]}), then the transformation will construct a tree structure data for the first element of the new \wit{environment}:\\\\
+\begin{tikzpicture}[sibling distance=10em,
+  every node/.style = {shape=rectangle,
+    draw, align=center,
+    top color=white, bottom color=white}]]
+  \node {$\cdot$}
+    child { node {\wit{A}} }
+    child { node {$\cdot$}
+      child { node {\wit{B}}}
+      child { node {$\cdot$} 
+	child { node {\wit{C}} } 
+	child { node {$\cdot$} 
+		child { node {\wit{D}} }
+		child { node {$\cdot$} 
+			child { node {\wit{E}} }
+			child { node {\wit{dnil}} } } } } };
+\end{tikzpicture} \textbf{\wit{:: []}}\\
+Then we can transform the \wit{expression}. 
+For the \wit{expression} of \wit{head}, \wit{tail}, \wit{cons}, \wit{nil} and \wit{equality}, we can easily recursively transform the target \wit{expression} from the argument.
+For the \wit{expression} that use the value of variable that in the \wit{environment}, for example \wit{var C} in our previous example, we can use the \wit{expression} \wit{head (tail (tail (var zero)))} to get the same value from the transformed \wit{1} variable environment.\\
+Then similarly we can transform the \wit{command}.
+For the \wit{command} of \wit{sequence} and \wit{while} loop, we can easily recursively transform the target \wit{command} from the argument.
+For the \wit{expression} of \wit{assignment}, for example we assign variable \wit{C} with value \wit{K} $\in$ \md{E}, the \wit{environment} with five variables updated as:
+\begin{center}
+(\wit{A :: B :: C :: D :: E ::[]}) $\Longrightarrow$ (\wit{A :: B :: \textbf{K} :: D :: E ::[]})
+\end{center}
+Then we can write the new \wit{assignment} \wit{command} as \\
+$zero$ $:=$ $(hd$ $(var$ $zero))$ $\cdot$ $((hd$ $(tl$ $(var$ $zero)))$ $\cdot$ $((K)$ $\cdot$ $(tl$ $(tl$ $(tl$ $(var$ $zero))))))$ and\\\\
+\begin{tikzpicture}[sibling distance=4em,
+  every node/.style = {shape=rectangle,
+    draw, align=center,
+    top color=white, bottom color=white}]]
+  \node {$\cdot$}
+    child { node {\wit{A}} }
+    child { node {$\cdot$}
+      child { node {\wit{B}}}
+      child { node {$\cdot$} 
+	child { node {\wit{C}} } 
+	child { node {$\cdot$} 
+		child { node {\wit{D}} }
+		child { node {$\cdot$} 
+			child { node {\wit{E}} }
+			child { node {\wit{dnil}} } } } } };
+\end{tikzpicture} \textbf{\wit{:: []}} $\Longrightarrow$
+\begin{tikzpicture}[sibling distance=4em,
+  every node/.style = {shape=rectangle,
+    draw, align=center,
+    top color=white, bottom color=white}]]
+  \node {$\cdot$}
+    child { node {\wit{A}} }
+    child { node {$\cdot$}
+      child { node {\wit{B}}}
+      child { node {$\cdot$} 
+	child { node {\wit{\textbf{K}}} } 
+	child { node {$\cdot$} 
+		child { node {\wit{D}} }
+		child { node {$\cdot$} 
+			child { node {\wit{E}} }
+			child { node {\wit{dnil}} } } } } };
+\end{tikzpicture} \textbf{\wit{:: []}}\\
+Finally we can transform the \wit{program}.
+We should transform the initial \wit{environment} at first.
+Then we can transform the \wit{command}.
+Finally we should get the result from the transformed \wit{environment}.\\
+The proof of the correctness of the transformation will be held in the future.
+\subsection{Interpret WHILE Program with Arbitrary Variables}
+If we can prove that the \WHILE program has the same computation ability with \textbf{WHILE-I} program which has only one variable,
+we could conclude that our universal \WHILE program defined in \ref{universal-I} could simulate the \WHILE program has arbitrary variables.
+For example, for \wit{p} $\in$ \md{P} $n$ and \wit{input}, \wit{output} $\in$ \md{D}, if we want to use our universal \WHILE program to simulate $p(input)$,
+then we could transform $p$ to $p-I$ which has only one variable by our predefined transformation function.
+And we know that $p(input)$ yielding $output$ implies that $p-I(input)$ yielding $output$ by the proof of correctness of the transformation function.
+And by the proof of the correctness of the universal \WHILE program we know that $p-I(input)$ yielding $output$ implies that $u(\lfloor p-I\rfloor \cdot input)$ yielding $output$.
+Thus we can conclude that for \wit{p} $\in$ \md{P} $n$ and \wit{input}, \wit{output} $\in$ \md{D}, $p(input)$ yielding $output$ implies $u(\lfloor p-I\rfloor \cdot input)$ yielding $output$ which means universal \WHILE program defined in \ref{universal-I} could simulate the \WHILE program has arbitrary variables.\\
+Thus for the proof of \wit{halting problem}, we could say that for \wit{p} $\in$ \md{P} $n$, \wit{h} could decide the \wit{halting problem} implies \wit{false}.
+
+\iffalse
+if-else8 ((hd (hd (var Cd))) =? quoteE)
+                   ((St := (cons (tl (hd (var Cd))) (var St)))
+                   →→ (Cd := tl (var Cd)))
+         (if-else8 (hd (hd (var Cd)) =? varE)
+                   (if8 (tl (hd (var Cd)) =? valueE zero)
+                        ((Cd := tl (var Cd))
+                        →→ (St := cons (var V1) (var St))))
+         (if-else8 (hd (hd (var Cd)) =? hdE)
+                   (Cd := cons (tl (hd (var Cd)))
+                               (cons dohdE (tl (var Cd))))
+         (if-else8 (hd (var Cd) =? dohdE)
+                   ((Cd := tl (var Cd))
+                   →→ (St := cons (hd (hd (var St))) (tl (var St))))
+         (if-else8 (hd (hd (var Cd)) =? tlE)
+                   (Cd := cons (tl (hd (var Cd)))
+                               (cons dotlE (tl (var Cd))))
+         (if-else8 (hd (var Cd) =? dotlE)
+                   ((Cd := tl (var Cd))
+                   →→ (St := cons (tl (hd (var St))) (tl (var St))))
+         (if-else8 (hd (hd (var Cd)) =? consE)
+                   (Cd := cons (hd (tl (hd (var Cd))))
+                               (cons (tl (tl (hd (var Cd))))
+                                     (cons doconsE (tl (var Cd)))))
+         (if-else8 (hd (var Cd) =? doconsE)
+                   ((Cd := tl (var Cd))
+                   →→ (St := cons (cons (hd (tl (var St)))
+                                  (hd (var St))) (tl (tl (var St)))))
+         (if-else8 (hd (hd (var Cd)) =? =?E)
+                   (Cd := cons (hd (tl (hd (var Cd))))
+                               (cons (tl (tl (hd (var Cd))))
+                                     (cons do=?E (tl (var Cd)))))
+         (if-else8 (hd (var Cd) =? do=?E)
+                   ((Cd := tl (var Cd))
+                   →→ (St := cons ((hd (tl (var St))) =? (hd (var St)))
+                                  (tl (tl (var St)))))
+         (if-else8 (hd (hd (var Cd)) =? →→E)
+                   (Cd := cons (hd (tl (hd (var Cd))))
+                               (cons (tl (tl (hd (var Cd)))) (tl (var Cd))))
+         (if-else8 (hd (hd (var Cd)) =? :=E)
+                   (if8 ((hd (hd (tl (hd (var Cd))))) =? varE)
+                        (if8 (tl (hd (tl (hd (var Cd)))) =? valueE zero)
+                             (Cd := cons (tl (tl (hd (var Cd))))
+                                         (cons doasgnE (tl (var Cd))))))
+         (if-else8 (hd (var Cd) =? doasgnE)
+                   ((Cd := tl (var Cd))
+                   →→ ( (V1 := hd (var St)) →→ (St := tl (var St))))
+         (if-else8 (hd (hd (var Cd)) =? whileE)
+                   (Cd := cons (hd (tl (hd (var Cd))))
+                               (cons dowhE
+                                     (cons (cons whileE
+                                                 (cons (hd (tl (hd (var Cd))))
+                                                       (tl (tl (hd (var Cd))))))
+                                           (tl (var Cd)))))
+         (if-else8 (hd (var Cd) =? dowhE)
+                   (if8 (hd (hd (tl (var Cd))) =? whileE)
+                        (if-else8 (hd (var St) =? nil)
+                                  ((Cd := tl (tl (var Cd)))
+                                  →→ (St := tl (var St)))
+                        ((Cd := cons (tl (tl (hd (tl (var Cd)))))
+                                     (cons (cons whileE
+                                                 (cons (hd (tl (hd (tl (var Cd)))))
+                                                       (tl (tl (hd (tl (var Cd)))))))
+                                           (tl (tl (var Cd)))))
+                        →→ (St := tl (var St)))))
+         (if8      (var Cd =? nil)                (Cd := nil))))))))))))))))
+\fi

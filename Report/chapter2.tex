@@ -1,0 +1,506 @@
+\chapter{Design and Implementation}
+
+\section{WHILE Language Model in \Agda}
+\subsection{Tree Data Structure}
+The language \WHILE computes with \wit{trees} data structure built from a finite set. 
+Thus we define a tree data structure $\mathds{D}$ with several related functions in \textbf{Agda} at first.
+We must define the \wit{atoms} for the \wit{trees} at first.
+\wit{Atoms} means they can't be divided further into subparts.
+However it is really complex to define a lot of \wit{atoms} which may make our proof more complicated.
+In fact, we can define only one \wit{atom} called \wit{nil}, because any other values, or say other "atoms" we presumable to define could be constructed by combining different number of \wit{nil} in different order.
+Thus, we define the data structure as:
+\begin{code}
+data D : Set where
+  dnil : D 
+  _∙_  : D → D → D
+\end{code}
+And provide the approach to visit the first or the second element of an element in $\mathds{D}$.
+
+\subsection{Syntax}
+The syntax of \WHILE is defined following the syntax definition in the book\cite{jones_computability_1997} as:
+\subsubsection{Expression}
+An expression is construct in a binary tree format, which has the same format of the data structure we defined previously.
+Then an expression is either the value of some variable, the \wit{atom} value which is the \wit{nil}, the first or the second value of another expression, the combination of two expression, or the equality of two expression.
+The definition of the syntax of \wit{Expression} could be found in \ref{appendix:syntax of expression}.\\
+Then we define the data type of $\mathds{E}$ in \Agda:
+\begin{code}
+data E (n : ℕ) : Set where
+  var  : Fin n → E n
+  nil  : E n
+  cons : E n → E n → E n
+  hd   : E n → E n
+  tl   : E n → E n
+  _=?_ : E n → E n → E n
+\end{code}
+We use the member in a \textbf{finite set} to represent the variables instead of variable names. 
+For example \textbf{Fin n} is a finite set that contain \textbf{n} elements from \textbf{zero} to $\underbrace{\mbox{\textbf{suc (suc }} \dots \mbox{\textbf{ suc (zero))}}}_{\textbf{n - 1}}$.
+Then we can directly use the element in the set to indicate variables name (\textbf{zero} is the first variable and so on).
+\subsubsection{Command}
+An \wit{command} is either the assignment from some expression to some variable, or the sequence of two \wit{commands}, or the \wit{while} loop.
+The definition of the syntax of \wit{Command} could be found in \ref{appendix:syntax of command}.\\
+Then we define the data type of $\mathds{C}$ in \Agda:
+\begin{code}
+data C (n : ℕ) : Set where
+  _:=_   : Fin n  → E n → C n
+  _→→_ : C n → C n → C n
+  while  : E n → C n → C n
+\end{code}
+\subsubsection{Program}
+The program is consist of an \wit{input} variable which is the variable to store the \wit{input}, an \wit{output} variable which is the variable to store the final result, and a \wit{Command}:\\
+Programs \hspace{0.5cm}$\ni$\hspace{0.4cm} P\hspace{0.6cm} ::= \textbf{read} X \textbf{;} C \textbf{;} \textbf{write} Y\\
+And we can define the same data type of $\mathds{P}$ in \Agda:
+\begin{code}
+data P (n : ℕ) : Set where
+  prog : Fin n → C n → Fin n → P n
+\end{code}
+
+\subsection{Semantics}
+To define the semantics of \WHILE language, we must give a definition of \wit{Partial Function} at first\cite{jones_computability_1997}:\\
+Let \wit{A, B} be sets, a partial function \wit{g} is written as $g: A \rightarrow B_\bot$ and we said \wit{g} is effectively computable if there is an effective procedure such that for any $x \in A$:
+\begin{itemize}
+  \item The procedure eventually halts, yielding $g(x) \in B$, if $g(x)$ is defined;
+  \item The procedure never halts, if $g(x)$ is undefined.
+\end{itemize}
+Then we could show that the program in \WHILE can be used as a partial function from $\mathds{D}$ to $\mathds{D}_\bot$.
+\subsubsection{Environment}
+We should define the \wit{environment} of the \wit{command}, written as $[x_1 \mapsto v_1, x_2 \mapsto v_2, \dots,x_n \mapsto v_n]$ to indicate the finite mapping function such that $h(x_i) = v_i$, where $v_i \in \mathds{D}$.
+Then we use the notion $\sigma$ to indicate the \wit{environment} in \WHILE that has type \wit{Store},
+and for $p \in \mathds{P}$, $p$ $=$ read X; C; write Y, the initial store $\sigma_0^p$ is $[X \mapsto d, Y_1 \mapsto nil, \dots,Y_n \mapsto nil]$, and $\forall$ variable \wit{X} and \wit{Z} such that \wit{X} and \wit{Z} are variables in program \wit{p} and $X \neq Z$, then Z is in $Y_i$.\\
+In \Agda, we use the data type vector \textbf{Vec D n} to represent the store. Vector in \textbf{Agda} have the type:
+\begin{code}
+data Vec {a} (A : Set a) : ℕ → Set
+\end{code}
+which bind a list of certain type element with certain number of length.
+Because the \wit{store} and the program use the same $\textbf{n}$ for both finite set of variable and its correspondence value,
+the program is impossible to meet the situation that one variable hasn't been defined.
+\subsubsection{Semantics of Expression}
+Then we can define the evaluation function $\upvarepsilon$ with the type of $\mathds{E} \longrightarrow $ ($Store^p \rightarrow \mathds{D})$, 
+which means for $e \in \mathds{E}$ and a given \wit{store} of program $\mathds{P}$ : $\sigma \in Store^{\mathds{P}}$, $\upvarepsilon \llbracket e \rrbracket \sigma = d \in \mathds{D}$.
+The definition of the evaluation function could be find in \ref{appendix:semantics of expression}.
+The \Agda implementation of the evaluation function is defined as following:
+\begin{code}[fontsize=\footnotesize]
+eval : {n : ℕ} → E n → Vec D n → D
+eval (var x) v = dlookup x v
+eval nil v = dnil
+eval (cons e₁ e₂) v = eval e₁ v ∙ eval e₂ v
+eval (hd e) v = dhead (eval e v)
+eval (tl e) v = dtail (eval e v)
+eval (e₁ =? e₂) v with equalD? (eval e₁ v) (eval e₂ v)
+eval (e₁ =? e₂) v | eq x = dnil ∙ dnil
+eval (e₁ =? e₂) v | neq x = dnil
+\end{code}
+\subsubsection{Semantics of Command}
+The execution of a \wit{Command} in the program $\mathds{P}$ could be used as a function $f : \mathds{C} \times Store^{\mathds{P}} \times Store^{\mathds{P}}$.
+However because we can't guarantee that the execution of a \wit{Command} will eventually halt and yielding some output, the execution function should be a partial function $f : \mathds{C} \times Store^{\mathds{P}} \times Store^{\mathds{P}}_\bot$.
+From this point of view, it is better to use a relation instead of a partial function to represent the execution of a \wit{command} \wit{c} $\in \mathds{C}$ as $c \vdash \sigma \rightarrow \sigma' \subseteq \mathds{C} \times Store^{\mathds{P}} \times Store^{\mathds{P}}$ where $\sigma'$ is the new \wit{environment} updated by the execution of \wit{command} \wit{c}.
+The definition of the execution \wit{command} relationship could be find in \ref{appendix:semantics of command}.
+The \Agda implementation of the execution relationship is defined as following:
+\begin{code}[fontsize=\footnotesize]
+data _⊢_⇒_ {n : ℕ} : C n → Vec D n  → Vec D n → Set where
+  whilef : {e : E n}{c : C n}{env : Vec D n}
+         → isNil (eval e env)
+         → (while e c) ⊢ env ⇒ env
+  whilet : {e : E n}{c : C n}{env₁ env₂ env₃ : Vec D n}
+         → isTree (eval e env₁)
+         → c ⊢ env₁ ⇒ env₂
+         → (while e c) ⊢ env₂ ⇒ env₃
+         → (while e c) ⊢ env₁ ⇒ env₃
+  assign : {v : Fin n}{e : E n}{env : Vec D n}
+         → (v := e) ⊢ env ⇒ (updateE v (eval e env) env)
+  seq    : {c₁ c₂ : C n}{env₁ env₂ env₃ : Vec D n}
+         → c₁ ⊢ env₁ ⇒ env₂
+         → c₂ ⊢ env₂ ⇒ env₃
+         → (c₁ →→ c₂) ⊢ env₁ ⇒ env₃
+\end{code}
+\subsubsection{Semantics of Program}
+Similar to the definition of execution of $\mathds{C}$ in \WHILE, the execution of program $\mathds{P}$ should also be defined as a relationship.
+Following the definition given by \wit{Jones, Neil D} in his paper\cite{jones_computability_1997}, we could know that the semantics of \WHILE is:\\
+$\llbracket$$\bullet$$\rrbracket$$^{\mbox{WHILE}}$ : $\mathds{P}$ $\rightarrow$ ($\mathds{D}$ $\rightarrow$ $\mathds{D}$$_\perp$) defined for p = read X; C; write Y by:\\
+$\llbracket$p$\rrbracket$$^{\mbox{WHILE}}$ = e if C $\vdash \sigma^p_0$(d)$ \rightarrow \sigma$ and $\sigma$(Y) = e\\
+If there is no e such that $\llbracket$p$\rrbracket$ = e, then p \textbf{loops} on d; otherwise p terminates on d.\\
+Following the definition, we define the partial relationship in \textbf{Agda} as follow:
+\begin{code}
+data ExecP {n : ℕ} : P n → D → D → Set where
+  terminate : (x y : Fin n){c : C n}{env : Vec D n}{d : D}
+            → c ⊢ (updateE x d initialVec) ⇒ env
+            → ExecP (prog x c y) d (dlookup y env)
+\end{code}
+The example of \WHILE program and the execution of \WHILE program could be find at \ref{appendix:while example}.
+\subsection{Run \WHILE in K Steps}
+Even the execution of the command \md{C} and the program \md{P} are both a partial relationship, which means we can't guarantee the command or the program will eventually halt on some input(that is what we are proving),
+we can still define the partial function that try to execute the command \md{C} and program \md{P} in \wit{k} time.\\
+Firstly we should define some data type to recored the execution step number of a given command.
+\begin{code}
+record ResultCT {n : ℕ}(c : C n)(inp : Vec D n) : Set where
+  field
+    out  : Vec D n
+    exe  : c ⊢ inp ⇒ out
+    time : ℕ
+\end{code}
+Then we can construct the function to prove that one command may be executed in \wit{k} time:
+\begin{code}
+kStepC : {n : ℕ} → (k : ℕ) → (c : C n) → (inp : Vec D n) 
+	→ (Maybe (ResultCT c inp))
+\end{code}
+The idea of that function is to do induction on the \wit{k} at first.
+None command could be run in \wit{zero} step.
+Then the function will do induction on the \wit{command}.
+The assignment step will only cost \wit{1} step.
+The steps costed on the sequence of two \wit{command} $c_1$ and $c_2$ will be the sum of steps that costed on $c_1$ and the steps that costed on $c_2$.
+Similarly in the \wit{while} loop, the \wit{command} will cost \wit{zero} step if the \wit{expression} to the \wit{while} loop could be evaluated to \wit{false}.
+It will cost steps that costed on $c$ and the continuous steps that costed on the following \wit{while} loop as the total steps to the \wit{command}.\\
+Finally, if a command \wit{c} could be executed in \wit{k} steps, then a program \wit{p} = (read X; c; write Y) could also be executed in \wit{k} steps:
+\begin{code}
+kStepP : {n : ℕ} → (time : ℕ) → (p : P n) → (inp : D) 
+	→ (Maybe (? D (ExecP p inp)))
+\end{code}
+
+\section{Universal \WHILE model}\label{universal-I}
+\subsection{Interpret \WHILE program}
+In order to construct the universal \WHILE model in \Agda later, we must define the method to code a program into \md{D} in order to feed the program as the input to the universal \WHILE program later.
+It is important to define the operator $\bullet$ of our data structure \md{D} with no association, which would avoid the ambiguous.\\
+Initially we should define some constants to indicate some distinct elements of \md{D}.
+Those constants would represent the program in format of \md{D}.
+The definition could be found in \ref{appendix:const of d}.\\
+Then we defined the function that map the program to \md{D}: $\lfloor\bullet\rfloor \in \mathds{P} \times \mathds{D}$.
+The \wit{code} function is consisted of three parts.
+\subsubsection{Code the Expression}
+Initially we should define the function that code the \wit{expression} into \md{D}.
+The definition of the mapping function of \wit{expression} could be find in \ref{appendix:code while}.
+Then we could define the function in \Agda following the same definition:
+\begin{code}
+codeE : {n : ℕ} → E n → D
+codeE (var x) = dvar ∙ dftod x
+codeE nil = dquote ∙ dnil
+codeE (cons e₁ e₂) = dcons ∙ (codeE e₁ ∙ codeE e₂)
+codeE (hd e) = dhd ∙ codeE e
+codeE (tl e) = dtl ∙ codeE e
+codeE (e₁ =? e₂) = d=? ∙ (codeE e₁ ∙ codeE e₂)
+\end{code}
+\subsubsection{Code the Command}
+Then we should define the function that code the \wit{command} into \md{D}.
+The definition of the mapping function of \wit{command} could be find in \ref{appendix:code while}.
+Then we could define the function in \Agda following the same definition:
+\begin{code}
+codeC : {n : ℕ} → C n → D
+codeC (x := e) = d:= ∙ ((dvar ∙ dftod x) ∙ codeE e)
+codeC (c₁ →→ c₂) = d→→ ∙ (codeC c₁ ∙ codeC c₂)
+codeC (while e c) = dwhile ∙ (codeE e ∙ codeC c)
+\end{code}
+\subsubsection{Code the Program}
+Finally we should define the function that code the \wit{program} into \md{D}.
+In addition to follow the mapping function, I also add the number of variable of the program into the result of coding.
+The definition of the mapping function of \wit{program} could be find in \ref{appendix:code while}.
+Then we could define the function in \Agda following the same definition:
+\begin{code}
+codeP : {n : ℕ} → P n → D
+codeP {n} (prog x c y) = const n ∙ ((dvar ∙ dftod x) ∙
+                                    (codeC c ∙
+                                    (dvar ∙ dftod y)))
+\end{code}
+\subsubsection{Decode}
+Beyond the coding method that map the \wit{program} to \md{D}, I also define the function that decode the \md{D} and map it to \wit{program}.
+However because the function \wit{decode} is a partial function, sometimes it may cause decoding fail because the input \md{D} doesn't following the format of program.
+\begin{code}
+decodeE : {n : ℕ} → D → Maybe (E n)
+decodeC : {n : ℕ} → D → Maybe (C n)
+decodeP : D → Maybe (? ℕ P)
+\end{code}
+\subsection{Universal \WHILE model}
+Initially we should define the variable in the \WHILE language, the definition could be found in \ref{appendix:variable of u}.\\
+Then we should define some syntax sugar such as \wit{if} and \wit{if-else}:
+\begin{code}[fontsize=\footnotesize]
+if8 : E 8 → C 8 → C 8
+if8 e c = (Z := e) →→ while (var Z) ((Z := nil) →→ c)
+
+if-else8 : E 8 → C 8 → C 8 → C 8
+if-else8 e c₁ c₂ = (Z := e) →→
+                   (W := cons nil nil) →→
+                   ((while (var Z)
+                           ((Z := nil) →→
+                           ((W := nil) →→
+                           c₁))) →→
+                   (while (var W)
+                          ((W := nil) →→
+                          c₂)))
+\end{code}
+Finally we should define the universal \WHILE program.
+Here we firstly define the universal \WHILE program that could simulate other \WHILE program which has only one variable.
+The definition could be found in \ref{appendix:universal while}.\\
+The the program is defined in \Agda as:
+\begin{code}
+universalI : P 8
+universalI = prog PD ((Pp := hd (var PD))
+                     →→
+                     (Cc := hd (tl (var Pp)))
+                     →→
+                     (Cd := cons (var Cc) nil)
+                     →→
+                     (St := nil)
+                     →→
+                     (V1 := tl (var PD))
+                     →→
+                     (while (var Cd) STEP-I))
+                  V1
+\end{code}
+\subsubsection{Interpret by \Agda}
+We can imitate the simulation step following the definition using \Agda at first.
+The definition of the \wit{STEP} Macro could be find in \ref{appendix:step}.\\
+Initially we could define the data relationship $(Cd,St,V1)\Rightarrow(Cd',St',V1')$ $\in$  $(\mathds{D},\mathds{D},\mathds{D})\times (\mathds{D},\mathds{D},\mathds{D})$ as a one step relationship.
+\begin{code}[fontsize=\footnotesize]
+data _⇒_ : D × D × D → D × D × D → Set where
+  equote  : (d Cr St V1 : D)
+            → < (dquote ∙ d) ∙ Cr , St , V1 >
+            ⇒ < Cr , d ∙ St , V1 >
+  evar1   : (Cr St V1 : D)
+            → < (dvar ∙ dftod {1} zero) ∙ Cr , St , V1 >
+            ⇒ < Cr , V1 ∙ St , V1 >
+  ehd     : (E Cr St V1 : D)
+            → < (dhd ∙ E) ∙ Cr , St , V1 >
+            ⇒ < E ∙ (dohd ∙ Cr) , St , V1 >
+  edohd   : (T Cr St V1 : D)
+            → < dohd ∙ Cr , T ∙ St , V1 >
+            ⇒ < Cr , (dfst T) ∙ St , V1 >
+  etl     : (E Cr St V1 : D)
+            → < (dtl ∙ E) ∙ Cr , St , V1 >
+            ⇒ < E ∙ (dotl ∙ Cr) , St , V1 >
+  edotl   : (T Cr St V1 : D)
+            → < dotl ∙ Cr , T ∙ St , V1 >
+            ⇒ < Cr , (dsnd T) ∙ St , V1 >
+  econs   : (E₁ E₂ Cr St V1 : D)
+            → < (dcons ∙ (E₁ ∙ E₂)) ∙ Cr , St , V1 >
+            ⇒ < E₁ ∙ (E₂ ∙ (docons ∙ Cr)) , St , V1 >
+  edocons : (U T Cr St V1 : D)
+            → < docons ∙ Cr , U ∙ (T ∙ St) , V1 >
+            ⇒ < Cr , (T ∙ U) ∙ St , V1 >
+  e=?     : (E₁ E₂ Cr St V1 : D)
+            → < (d=? ∙ (E₁ ∙ E₂)) ∙ Cr , St , V1 >
+            ⇒ < E₁ ∙ (E₂ ∙ (do=? ∙ Cr)) , St , V1 >
+  edo=?   : (U T Cr St V1 : D)
+            → < do=? ∙ Cr , U ∙ (T ∙ St) , V1 >
+            ⇒ < Cr , (dequal T U) ∙ St , V1 >
+  e→→     : (C₁ C₂ Cr St V1 : D)
+            → < (d→→ ∙ (C₁ ∙ C₂)) ∙ Cr , St , V1 >
+            ⇒ < C₁ ∙ (C₂ ∙ Cr) , St , V1 >
+  e:=     : (E Cr St V1 : D)
+            → < (d:= ∙ ((dvar ∙ dftod {1} zero) ∙ E)) ∙ Cr , St , V1 >
+            ⇒ < E ∙ (doasgn ∙ Cr) , St , V1 >
+  edoasgn : (W Cr St V1 : D)
+            → < doasgn ∙ Cr , W ∙ St , V1 >
+            ⇒ < Cr , St , W >
+  ewhile  : (E C Cr St V1 : D)
+            → < (dwhile ∙ (E ∙ C)) ∙ Cr , St , V1 >
+            ⇒ < E ∙ (dowh ∙ ((dwhile ∙ (E ∙ C)) ∙ Cr)) , St , V1 >
+  edowhf  : (E C Cr St V1 : D)
+            → < dowh ∙ ((dwhile ∙ (E ∙ C)) ∙ Cr) , dnil ∙ St , V1 >
+            ⇒ < Cr , St , V1 >
+  edowht  : (E C X Y Cr St V1 : D)
+            → < dowh ∙ ((dwhile ∙ (E ∙ C)) ∙ Cr) , (X ∙ Y) ∙ St , V1 >
+            ⇒ <  C ∙ ((dwhile ∙ (E ∙ C)) ∙ Cr)  , St , V1 >
+  enil    : (St V1 : D) → < dnil , St , V1 > ⇒ < dnil , St , V1 >
+\end{code}
+Then we should define the several steps relationship $(Cd,St,V1)\Rightarrow^*(Cd',St',V1')$ $\in$  $(\mathds{D},\mathds{D},\mathds{D})\times (\mathds{D},\mathds{D},\mathds{D})$.
+\begin{code}
+data _⇒*_ : D × D × D → D × D × D → Set where
+  id   : (Cr St V1 : D) → < Cr , St , V1 > ⇒* < Cr , St , V1 >
+  seq  : (Cr₁ Cr₂ Cr₃ St₁ St₂ St₃ V1₁ V1₂ V1₃ : D)
+         → < Cr₁ , St₁ , V1₁ > ⇒  < Cr₂ , St₂ , V1₂ >
+         → < Cr₂ , St₂ , V1₂ > ⇒* < Cr₃ , St₃ , V1₃ >
+         → < Cr₁ , St₁ , V1₁ > ⇒* < Cr₃ , St₃ , V1₃ >
+\end{code}
+We should proof the associative of relation $\Rightarrow^*$.
+\begin{code}
+  ⇒*-m : (Cr₁ Cr₂ Cr₃ St₁ St₂ St₃ V1₁ V1₂ V1₃ : D)
+              → < Cr₁ , St₁ , V1₁ > ⇒* < Cr₂ , St₂ , V1₂ >
+              → < Cr₂ , St₂ , V1₂ > ⇒* < Cr₃ , St₃ , V1₃ >
+              → < Cr₁ , St₁ , V1₁ > ⇒* < Cr₃ , St₃ , V1₃ >
+  ⇒*-b : (Cr₁ Cr₂ Cr₃ St₁ St₂ St₃ V1₁ V1₂ V1₃ : D)
+              → < Cr₁ , St₁ , V1₁ > ⇒* < Cr₂ , St₂ , V1₂ >
+              → < Cr₂ , St₂ , V1₂ > ⇒  < Cr₃ , St₃ , V1₃ >
+              → < Cr₁ , St₁ , V1₁ > ⇒* < Cr₃ , St₃ , V1₃ >
+\end{code}
+Then we can prove that if for $E \in \mathds{E}$, $\upvarepsilon \llbracket E \rrbracket [V1 \mapsto d] = d_e$, then $((codeE E\cdot Cr),St,d)\Rightarrow^*(Cr,(d_e\cdot St),d)$.
+\begin{code}
+⇒*e : (e : E 1) → (d₁ d₂ Cr St : D)
+       → eval e (updateE zero d₁ initialVec) ≡ d₂
+       → < codeE e ∙ Cr , St , d₁ > ⇒* < Cr , d₂ ∙ St , d₁ >
+\end{code}
+After that, we can prove that if for $C \in \mathds{C}$, $C \vdash [V1 \mapsto d_1] \Rightarrow [V1 \mapsto d_2]$, then $((codeC C\cdot Cr),St,d_1)\Rightarrow^*(Cr,St,d_2)$.
+\begin{code}
+⇒*ok : (c : C 1) → (d₁ d₂ Cr St : D) → (out : Vec D 1)
+       → c ⊢ updateE zero d₁ initialVec ⇒ out
+       → dlookup zero out ≡ d₂
+       → < codeC c ∙ Cr , St , d₁ > ⇒* < Cr , St , d₂ >
+\end{code}
+This proof means the execution of \wit{command} has relationship with the relation $\Rightarrow$, which means one step of execution of \wit{command} is corresponding to the several step $\Rightarrow^*$, which is the simulation of \WHILE program in \textbf{Agda}.
+\subsubsection{Interpret by \WHILE program}
+Then we should define real universal \WHILE program.
+The most important part is the \wit{STEP} Macro.
+Before we defining the Macro, we should define some constants in \md{E} which could be found in \ref{appendix:const of e}.\\
+Then we can define \wit{STEP} as a \wit{command} in \Agda:
+\begin{code}
+STEP-I : C 8
+STEP-I =  the interpretation command
+	  following the definition of STEP Macro
+	  and the syntax of WHILE program
+\end{code}
+Then we can prove that the simulation hold by \Agda has one step correspondence with the Macro \wit{STEP}.
+That is, if $(Cd,St,V1)\Rightarrow(Cd',St',V1')$, then \wit{STEP} $\vdash [\dots, Cd, St, V1, \dots] \Rightarrow [\dots, Cd', St', V1', \dots]$.
+\begin{code}
+  c-h : {Pd P C : D}(d₁ d₂ Cr₁ Cr₂ St₁ St₂ : D) 
+        → < Cr₁ , St₁ , d₁ > ⇒ < Cr₂ , St₂ , d₂ >
+        → STEP-I ⊢ (Pd ∷ P ∷ C ∷ Cr₁ ∷ St₁ ∷ d₁ ∷ dnil ∷ dnil ∷ [])
+                 ⇒ (Pd ∷ P ∷ C ∷ Cr₂ ∷ St₂ ∷ d₂ ∷ dnil ∷ dnil ∷ [])
+\end{code}
+Because both the relation $\Rightarrow$ and the execution of \wit{while} loop does the induction on one step, we could prove the several steps correspondence between \Agda simulation and the Macro \wit{STEP}.
+\begin{code}[fontsize=\footnotesize]
+step-I-ok : (c : C 1) → (d₁ d₂ : D) 
+            → < codeC c ∙ dnil , dnil , d₁ > ⇒* < dnil , dnil , d₂ >
+            → while (var Cd) STEP-I ⊢ (codeP (prog zero c zero)) ∙ d₁ ∷
+                                      (codeP (prog zero c zero)) ∷
+                                      codeC {1} c ∷ codeC {1} c ∙ dnil  ∷
+                                      dnil ∷ d₁ ∷ dnil ∷ dnil ∷ [])
+                                    ⇒ (codeP (prog zero c zero)) ∙ d₁ ∷
+                                      (codeP (prog zero c zero)) ∷
+                                      codeC {1} c ∷ dnil ∷ dnil ∷
+                                      d₂ ∷ dnil ∷ dnil ∷ [])
+\end{code}
+From this proof we can know that if \Agda could simulate some \WHILE program, then the universal \WHILE program can simulate the same \WHILE program.
+\subsection{Correctness of Universal \WHILE model}
+Finally by using the proof in the two previous parts, we can prove the correctness of the universal \WHILE program.
+\begin{code}
+execP-uni :  (p : P 1) → (d₁ d₂ : D)
+             → ExecP P d₁ d₂
+             → ExecP universalI ((codeP p)∙ d₁) d₂
+\end{code}
+As a result, we can conclude that for $p$ $\in$ \md{P} and $inp$, $out$ $\in$ \md{D}, if $p(inp)$ $\equiv$ $output$, then the universal \WHILE program $u$, $u(\lfloor p \rfloor \bullet inp)$ $\equiv$ $output$
+
+\section{Proof to Halting Problem}
+\subsection{Construct \WHILE program U}
+To prove the undecidability of \wit{halting problem} by contradiction, we should construct a special program at first.
+Following the definition on \wit{wiki}\cite{_halting_2015} and on paper\cite{boyer_mechanical_1984}, we could construct a program \textbf{U}.
+The strategy to construct \textbf{U} is decribed in \ref{definition of U}.
+However by considering the \wit{syntax} and \wit{semantic} of \WHILE program and universal \WHILE program, we know that we must feed the code of another program into our universal program as part of the argument.
+That is, when we are constructing the program \textbf{U}, and assume there is a program \wit{h} that could decide the halting problem, then the argument to the program \textbf{U} should be ($\lfloor h\rfloor \bullet input$).
+And to unify the argument to the program, the program \wit{h} inside \textbf{U} should run on ($input$ $\bullet$ ($\lfloor h\rfloor \bullet input$)).
+Thus, the definition of program \textbf{U} in \Agda is:
+\begin{code}[fontsize=\small]
+U : P 8
+U = prog PD ((Pp := hd (var PD))
+            →→
+            (Cc := hd (tl (var Pp)))
+            →→
+            (Cd := cons (var Cc) nil)
+            →→
+            (St := nil)
+            →→
+            (V1 := cons (tl (var PD)) (cons  (var Pp) (tl (var PD))))
+            →→
+            (while (var Cd) STEP-I)
+            →→
+            if-else8 (var V1) (while (cons nil nil) (V1 := var V1)) 
+			      (V1 := var V1)
+            )
+          V1
+\end{code}
+Because we don't have empty \wit{command}, we use the command $x := $var $x$ to assign the same value to its original variable, to indicate the empty \wit{command}.
+\subsubsection{Property 1 of U}
+From out definition of the program \textbf{U}, we can prove that if the execution result of $h$($input$ $\bullet$ ($\lfloor h\rfloor \bullet input$)) is \wit{true},
+then if we feed \wit{h} to program \textbf{U} and execute program \textbf{U} on ($\lfloor h\rfloor \bullet input$), program \textbf{U} will never terminate.\\
+Initially we can prove that the infinite loop can't terminate, and if there is \wit{command} in format of \wit{while true command}, then this \wit{while} loop is an infinite loop.
+\begin{code}
+wt : {n : ℕ} → C n → C n
+wt c = while (cons nil nil) c
+
+wt-loop : {t : D}{n : ℕ}{c : C n}{env₁ env₂ : Vec D n} 
+	  → (p : wt c ⊢ env₁ ⇒ env₂) → loop-ct p ≡ t → ⊥
+wt-loop (whilef ()) x
+wt-loop {dnil} (whilet x p p₁) ()
+wt-loop {.(loop-ct p) ∙ .(loop-ct p₁)} (whilet x p p₁) refl 
+	= wt-loop {loop-ct p₁} p₁ refl
+\end{code}
+Here we use \wit{nil} to indicate \wit{false} in \WHILE and \wit{others} to indicate \wit{true} in \WHILE program.
+The proof function does induction on the \wit{call tree}, which means the \wit{assignemnt} is the leaf of the tree, \wit{sequence} and \wit{while} loop both has two branches.\\
+Then we can prove that for any $h \in \mathds{P}$, if $h$($input$ $\bullet$ ($\lfloor h\rfloor \bullet input$)) yielding \wit{true}, then the execution of \textbf{U} on ($\lfloor h\rfloor \bullet input$) will never terminate.
+\begin{code}
+execP-U-loop :  {h : P 1} → (d₁ d₂ : D)
+             → ExecP h (d₁ ∙ ((codeP h) ∙ d₁)) d₂
+             → (d₂ ≡ dnil → ⊥)
+             → (∀ {d₃ : D} → ExecP U ((codeP h) ∙ d₁) d₃ → ⊥)
+\end{code}
+\subsubsection{Property 2 of U}
+From out definition of the program \textbf{U}, we can prove that if the execution result of $h$($input$ $\bullet$ ($\lfloor h\rfloor \bullet input$)) is \wit{false},
+then if we feed \wit{h} to program \textbf{U} and execute program \textbf{U} on ($\lfloor h\rfloor \bullet input$), program \textbf{U} will terminate immediately.
+\begin{code}
+execP-U-halt :  {h : P 1} → (d₁ d₂ : D)
+             → ExecP h (d₁ ∙ ((codeP h) ∙ d₁)) d₂
+             → d₂ ≡ dnil
+             → ExecP U ((codeP h) ∙ d₁) d₂
+\end{code}
+\subsection{Proof the Undecidability of Halting Problem}
+Finally we assume that there exists some program \wit{h} that will decide the \wit{halting problem} following the definition in \ref{definition of h}.
+\subsubsection{Property 1 of Machine H}
+The program \wit{h} is a program of \WHILE that has the property that for all \wit{p} $\in$ \md{P} and \wit{input} $\in$ \md{D}, if \wit{p} \textbf{\wit{halt}} on \wit{inp}, then \wit{h} ($\lfloor p\rfloor \bullet input$)) yielding \wit{true}.
+\begin{code}
+prop₁ : ∀ {n : ℕ} → ∀ {p : P n} → ∀ {inp : D}
+	→ (? D (ExecP p inp) 
+	→ ExecP h ((codeP p) ∙ inp) dtrue)
+\end{code}
+\subsubsection{Property 2 of Machine H}
+The program \wit{h} also has the property that for all \wit{p} $\in$ \md{P} and \wit{input} $\in$ \md{D}, if \wit{p} doesn't \textbf{\wit{halt}} on \wit{inp}, then \wit{h} ($\lfloor p\rfloor \bullet input$)) yielding \wit{false}.
+\begin{code}
+prop₂ : ∀ {n : ℕ} → ∀ {p : P n} → ∀ {inp : D}
+	→ (∀ {out : D} → ExecP p inp out → ⊥) 
+	→ ExecP h ((codeP p) ∙ inp) dfalse
+\end{code}
+\subsubsection{Propositional Proof}
+Then we can abstract the proof from the two properties of program \textbf{U} and the program \wit{h}.
+We can name the property "\textbf{U} \wit{halt} on ($\lfloor h\rfloor \bullet input$)" as \wit{X}, "\wit{h} ($\lfloor p\rfloor \bullet input$)) yielding \wit{true}" as \wit{Y} and "\wit{h} ($\lfloor p\rfloor \bullet input$)) yielding \wit{false}" as \wit{Z}.
+Then we can rename the two properties of \textbf{U} as \wit{xy} and \wit{nxz}, and the two properties of \wit{h} as \wit{ynx} and \wit{zx}.
+Note that $\neg\exists x, P x \equiv \forall x, \neg P x$.
+Then we can get contradiction from those four propositions.
+\begin{code}[fontsize=\small]
+postulate
+  X Y Z : Set
+  xy  : X → Y
+  nxz : (X → ⊥) → Z
+  ynx : Y → X → ⊥
+  zx  : Z → X
+
+a⊥ : X → ⊥
+a⊥ a = ynx (xy a) a
+
+bot : ⊥
+bot = a⊥ (zx (nxz a⊥))
+\end{code}
+\subsubsection{Final Proof}
+Finally we can prove the \wit{undecidability} of \wit{halting problem} by contraction, which means we assume there exists a program \wit{h} which could \wit{decide} the \wit{halting problem} and get $\bot$ from our assumption.
+\begin{code}[fontsize=\small]
+halt-contradiction : {h : P 1}
+                   → (∀ {n : ℕ} → ∀ {p : P n} → ∀ {inp : D}
+                      → (? D (ExecP p inp) 
+			  → ExecP h ((codeP p) ∙ inp) dtrue)
+                      ×  ((∀ {out : D} → ExecP p inp out → ⊥) 
+			  → ExecP h ((codeP p) ∙ inp) dfalse))
+                   → ⊥
+halt-contradiction {h} p = exec-U-⊥ (dnil , 
+				      (execP-U-halt {h} ((codeP U)) dnil 
+				        (u-loop 
+					  (lambda {out} q 
+					      → exec-U-⊥ (out , q))) 
+					refl))
+  where
+    prop = p {8}{U}{((codeP h) ∙ (codeP U))}
+    
+    u-halt : ? D (ExecP U ( (codeP h) ∙ (codeP U))) 
+	→ ExecP h ( (codeP U) ∙ ((codeP h) ∙ (codeP U))) dtrue
+    u-halt = proj₁ prop
+
+    u-loop : (∀ {out : D} → ExecP U ((codeP h) ∙  (codeP U)) out → ⊥) 
+	→ ExecP h ( (codeP U) ∙ ( (codeP h) ∙  (codeP U))) dfalse
+    u-loop = proj₂ prop
+
+    exec-U-⊥ : ? D (ExecP U ((codeP h) ∙ (codeP U))) → ⊥
+    exec-U-⊥ (d , p) = execP-U-loop ((codeP U)) dtrue 
+			(u-halt (d , p)) (lambda { () }) p
+\end{code}

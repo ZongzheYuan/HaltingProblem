@@ -1,0 +1,105 @@
+\documentclass[12pt]{ociamthesis}  % default square logo 
+%\documentclass[12pt,beltcrest]{ociamthesis} % use old belt crest logo
+%\documentclass[12pt,shieldcrest]{ociamthesis} % use older shield crest logo
+
+%load any additional packages
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+% The following packages are needed because unicode
+ % is translated (using the next set of packages) to
+ % latex commands. You may need more packages if you
+ % use more unicode characters:
+% include agda.sty
+
+ \usepackage{amssymb}
+\usepackage{tikz}
+ \usepackage{bbm}
+\usepackage{ dsfont }
+\usepackage{ upgreek }
+\usepackage{ stmaryrd }
+ \usepackage[greek,english]{babel}
+
+
+ % This handles the translation of unicode to latex:
+
+ \usepackage{ucs}
+ \usepackage[utf8x]{inputenc}
+ \usepackage{autofe}
+ % Some characters that are not automatically defined
+ % (you figure out by the latex compilation errors you get),
+ % and you need to define:
+
+ \DeclareUnicodeCharacter{8988}{\ensuremath{\ulcorner}}
+ \DeclareUnicodeCharacter{8989}{\ensuremath{\urcorner}}
+ \DeclareUnicodeCharacter{8803}{\ensuremath{\overline{\equiv}}}
+ \DeclareUnicodeCharacter{8718}{\ensuremath{\blacksquare}}
+ \DeclareUnicodeCharacter{8759}{\ensuremath{::}}
+
+
+\renewcommand{\baselinestretch}{1.2}
+
+ \usepackage{fancyvrb}
+
+ \DefineVerbatimEnvironment
+   {code}{Verbatim}
+   {} % Add fancy options here if you like.
+\newcommand{\wit}[1]{\textit{#1}}
+\newcommand{\Agda}{\textbf{Agda }}
+\newcommand{\WHILE}{\textbf{WHILE }}
+\newcommand{\md}[1]{$\mathds{#1}$}
+
+%input macros (i.e. write your own macros file called mymacros.tex 
+%and uncomment the next line)
+%\include{mymacros}
+
+\title{Undecidability of\\[1ex]     %your thesis title,
+        The Halting Problem\\[1ex] %note \\[1ex] is a line break in the title
+	\Large A Formal Proof in Agda}   
+
+\author{Zongzhe Yuan}             %your name
+\school{Computer Science}  %your school
+
+%\renewcommand{\submittedtext}{change the default text here if needed}
+\degree{Bachelor of Science}     %the degree
+\degreedate{May 2016}         %the degree date
+
+%end the preamble and start the document
+\begin{document}
+
+%this baselineskip gives sufficient line spacing for an examiner to easily
+%markup the thesis with comments
+\baselineskip=18pt plus1pt
+
+%set the number of sectioning levels that get number and appear in the contents
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+
+\maketitle                  % create a title page from the preamble info
+\include{acknowledgements}          % include the acknowledgements
+\include{abstract}          % include the abstract
+
+\begin{romanpages}          % start roman page numbering
+\tableofcontents            % generate and include a table of contents
+\end{romanpages}            % end roman page numbering
+
+%now include the files of latex for each of the chapters etc
+\include{chapter1}
+\include{chapter2}
+\include{conclusions}
+
+%now enable appendix numbering format and include any appendices
+\appendix
+\include{appendix1}
+\include{appendix2}
+
+%next line adds the Bibliography to the contents page
+\addcontentsline{toc}{chapter}{Bibliography}
+%uncomment next line to change bibliography name to references
+%\renewcommand{\bibname}{References}
+\bibliography{refs}        %use a bibtex bibliography file refs.bib
+\bibliographystyle{plain}  %use the plain bibliography style
+
+\end{document}
+

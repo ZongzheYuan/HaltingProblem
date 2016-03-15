@@ -1,0 +1,191 @@
+\chapter{Definition in the Universal \WHILE model}
+The definition of \WHILE language used in the project are following the definition in the paper \wit{Computability and complexity: from a programming perspective} by \wit{Jones, Neil D} in 1997\cite{jones_computability_1997}.
+\section{Constant in \WHILE}\label{appendix:const of d}
+First of all, we define a function that would construct some value in data of \md{D} based on the natural number \md{N}:
+\begin{code}
+const : (n : ℕ) → D
+const zero = dnil
+const (suc n) = (dnil ∙ dnil) ∙ const n
+\end{code}
+Then, there are sixteen constant in \md{D} that are used to indicate special meaning in the universal \WHILE program.
+\begin{code}[fontsize=\footnotesize]
+dquote : D
+dquote = const 1
+
+d:= : D
+d:= = const 2
+
+d→→ : D
+d→→ = const 3
+
+dwhile : D
+dwhile = const 4
+
+dvar : D
+dvar =  const 5
+
+ddnil : D
+ddnil = const 6
+
+dcons : D
+dcons = const 7
+
+dhd : D
+dhd = const 8
+
+dtl : D
+dtl = const 9
+
+d=? : D
+d=? = const 10
+
+dohd : D
+dohd = const 11
+
+dotl : D
+dotl = const 12
+
+docons : D
+docons = const 13
+
+doasgn : D
+doasgn = const 14
+
+dowh : D
+dowh = const 15
+
+do=? : D
+do=? = const 16
+\end{code}
+\section{Code \WHILE}\label{appendix:code while}
+The mapping function from the \WHILE program to \WHILE data is defined as:\\
+\indent\hspace{3cm}\underline{read V$_i$; C; write V$_j$}\hspace{0.5cm} = \hspace{0.5cm} ((vari)\underline{C}(varj))\\\\
+\indent\hspace{3cm}\underline{C; D}\hspace{3.3cm} = \hspace{0.5cm} (;\underline{CD})\\
+\indent\hspace{3cm}\underline{while E do C}\hspace{1.8cm} = \hspace{0.5cm} (while\underline{EC})\\
+\indent\hspace{3cm}\underline{V$_i$:= E}\hspace{2.9cm} = \hspace{0.5cm} (:=(vari)\underline{E})\\\\
+\indent\hspace{3cm}\underline{V$_i$}\hspace{3.75cm} = \hspace{0.5cm} (vari)\\
+\indent\hspace{3cm}\underline{d}\hspace{3.95cm} = \hspace{0.5cm} (quoted)\\
+\indent\hspace{3cm}\underline{cons E F}\hspace{2.6cm} = \hspace{0.5cm} (cons\underline{EF})\\
+\indent\hspace{3cm}\underline{hd E}\hspace{3.33cm} = \hspace{0.5cm} (hd\underline{E})\\
+\indent\hspace{3cm}\underline{tl E}\hspace{3.5cm} = \hspace{0.5cm} (tl\underline{E})\\
+\indent\hspace{3cm}\underline{=? E F}\hspace{2.8cm} = \hspace{0.5cm} (=?\underline{EF})\\
+\section{Variable of Universal \WHILE Program}\label{appendix:variable of u}
+We can define the eight variable of the universal \WHILE program as:
+\begin{code}[fontsize=\footnotesize]
+PD : Fin 8
+PD = zero
+
+Pp : Fin 8
+Pp = suc zero
+
+Cc : Fin 8
+Cc = suc (suc (zero))
+
+Cd : Fin 8
+Cd = suc (suc (suc (zero)))
+
+St : Fin 8
+St = suc (suc (suc (suc (zero))))
+
+V1 : Fin 8
+V1 = suc (suc (suc (suc (suc (zero)))))
+
+W : Fin 8
+W = suc (suc (suc (suc (suc (suc (zero))))))
+
+Z : Fin 8
+Z = suc (suc (suc (suc (suc (suc (suc (zero)))))))
+\end{code}
+\section{Universal \WHILE Program}\label{appendix:universal while}
+The universal \WHILE program which could simulate the \WHILE program of $1$ variable is defined as:
+\begin{code}
+read PD;             (* Input (p.d) *)
+  P := hd PD;        (* P = ((var 1) C (var 1)) *)
+  C := hd (tl P)     (* C = hd tl p program code is C *)
+  Cd := cons C nil;  (* Cd = (c.nil), Code to execute is c *)
+  St := nil;         (* St = nil, Stack empty *)
+  Vl := tl PD;       (* Vl = d Initial value of var.*)
+  while Cd do STEP;  (* do while there is code to execute *)
+write Vl;
+\end{code}
+Where the \wit{STEP} is the Macro that simulate the program.
+\section{STEP Macro}\label{appendix:step}
+When we are simulate the \WHILE program which has only one variable, we can easily define the stack machine as a Macro based on three variables: \wit{Cd} which is the \wit{command}, \wit{St} which is the stack and \wit{V1} which is the only one variable.
+Here we define the syntax sugar \wit{cons$^{*}$} as \wit{cons$^{*}$} \wit{A B C} = \wit{cons} \wit{A} (\wit{cons B C}). 
+Then we could rewrite [Cd, St] by:\\
+\indent\hspace{0.5cm}[((quote D)$\cdot$Cr), St]\hspace{1.55cm} $\Rightarrow$ \hspace{0.5cm} [Cr, cons D St]\\
+\indent\hspace{0.5cm}[((var 1)$\cdot$Cr), St]\hspace{2.1cm} $\Rightarrow$ \hspace{0.5cm} [Cr, cons V1 St]\\
+\indent\hspace{0.5cm}[((hd E)$\cdot$Cr), St]\hspace{2.15cm} $\Rightarrow$ \hspace{0.5cm} [cons$^{*}$ E dohd Cr, Sr]\\
+\indent\hspace{0.5cm}[(dohd$\cdot$Cr), (T$\cdot$Sr)]\hspace{1.7cm} $\Rightarrow$ \hspace{0.5cm} [Cr, cons (hd T) St]\\
+\indent\hspace{0.5cm}[((tl E)$\cdot$Cr), St]\hspace{2.35cm} $\Rightarrow$ \hspace{0.5cm} [cons$^{*}$ E dotl Cr, St]\\
+\indent\hspace{0.5cm}[(dotl$\cdot$Cr), (T$\cdot$Sr)]\hspace{1.9cm} $\Rightarrow$ \hspace{0.5cm} [Cr, cons (tl T) Sr]\\
+\indent\hspace{0.5cm}[((cons E$_1$ E$_2$)$\cdot$Cr), St]\hspace{1.1cm} $\Rightarrow$ \hspace{0.5cm} [cons$^{*}$ E$_1$ E$_2$ docons Cr, St]\\
+\indent\hspace{0.5cm}[(docons$\cdot$Cr), (U$\cdot$(T$\cdot$Sr))]\hspace{0.7cm} $\Rightarrow$ \hspace{0.5cm} [Cr, cons (cons T U) Sr]\\
+\indent\hspace{0.5cm}[((=? E$_1$ E$_2$)$\cdot$Cr), St]\hspace{1.35cm} $\Rightarrow$ \hspace{0.5cm} [cons$^{*}$ E$_1$ E$_2$ do=? Cr, St]\\
+\indent\hspace{0.5cm}[(do=?$\cdot$Cr), (U$\cdot$(T$\cdot$Sr))]\hspace{1cm} $\Rightarrow$ \hspace{0.5cm} [Cr, cons (=? T U) St]\\
+\indent\hspace{0.5cm}[((; C$_1$ C$_2$)$\cdot$Cr), St]\hspace{1.8cm} $\Rightarrow$ \hspace{0.5cm} [cons$^{*}$ C$_1$ C$_2$ Cr, St]\\
+\indent\hspace{0.5cm}[((:= (var 1) E)$\cdot$Cr), St]\hspace{0.9cm} $\Rightarrow$ \hspace{0.5cm} [cons$^{*}$ E (cons doasgn Cr), St]\\
+\indent\hspace{0.5cm}[(doasgn$\cdot$Cr), (W$\cdot$Sr)]\hspace{1.35cm} $\Rightarrow$ \hspace{0.5cm} \{Cd := Cr, St := Sr; V1 := W\}\\
+\indent\hspace{0.5cm}[((while E C)$\cdot$Cr), St]\hspace{1.35cm} $\Rightarrow$ \hspace{0.5cm} [cons$^{*}$ E dowh (while E C) Cr, St]\\
+\indent\hspace{0.5cm}[(dowh$\cdot$((while E C)$\cdot$Cr)), (nil$\cdot$Sr)]\hspace{0.85cm} $\Rightarrow$ \hspace{0.5cm} [Cr, Sr]\\
+\indent\hspace{0.5cm}[(dowh$\cdot$((while E C)$\cdot$Cr)), ((A$\cdot$B)$\cdot$Sr)]\hspace{0.3cm} $\Rightarrow$ \hspace{0.5cm} [cons$^{*}$ C (while E C) Cr, Sr]\\
+\indent\hspace{0.5cm}[nil, St]\hspace{3.9cm} $\Rightarrow$ \hspace{0.5cm} [nil, St]\\
+
+\section{Constant in Expression}\label{appendix:const of e}
+First of all, we define a function that would construct some value in the format of \md{E} based on the the data of \md{D}:
+\begin{code}
+dtoE : {n : ℕ} → D → E n
+dtoE dnil = nil
+dtoE (d₁ ∙ d₂) = cons (dtoE d₁) (dtoE d₂)
+\end{code}
+Then, there are sixteen constant in \md{E} that are used to indicate special meaning in the universal \WHILE program.
+\begin{code}[fontsize=\footnotesize]
+quoteE : {n : ℕ} → E n
+quoteE = dtoE dquote
+
+varE : {n : ℕ} → E n
+varE = dtoE dvar
+
+valueE : {n : ℕ} → (f : Fin n) → E n
+valueE f = dtoE (dftod f)
+
+hdE : {n : ℕ} → E n
+hdE = dtoE dhd
+
+dohdE : {n : ℕ} → E n
+dohdE = dtoE dohd
+
+tlE : {n : ℕ} → E n
+tlE = dtoE dtl
+
+dotlE : {n : ℕ} → E n
+dotlE = dtoE dotl
+
+consE : {n : ℕ} → E n
+consE = dtoE dcons
+
+doconsE : {n : ℕ} → E n
+doconsE = dtoE docons
+
+=?E : {n : ℕ} → E n
+=?E = dtoE d=?
+
+do=?E : {n : ℕ} → E n
+do=?E = dtoE do=?
+
+→→E : {n : ℕ} → E n
+→→E = dtoE d→→
+
+:=E : {n : ℕ} → E n
+:=E = dtoE d:=
+
+doasgnE : {n : ℕ} → E n
+doasgnE = dtoE doasgn
+
+whileE : {n : ℕ} → E n
+whileE = dtoE dwhile
+
+dowhE : {n : ℕ} → E n
+dowhE = dtoE dowh
+\end{code}
+
