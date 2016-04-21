@@ -1,4 +1,4 @@
-\documentclass[12pt]{ociamthesis}  % default square logo 
+\documentclass[12pt]{ociamthesis2}  % default square logo 
 %\documentclass[12pt,beltcrest]{ociamthesis} % use old belt crest logo
 %\documentclass[12pt,shieldcrest]{ociamthesis} % use older shield crest logo
 
@@ -11,7 +11,7 @@
  % latex commands. You may need more packages if you
  % use more unicode characters:
 % include agda.sty
-
+\usepackage{hyperref}
  \usepackage{amssymb}
 \usepackage{tikz}
  \usepackage{bbm}
@@ -19,7 +19,8 @@
 \usepackage{ upgreek }
 \usepackage{ stmaryrd }
  \usepackage[greek,english]{babel}
-
+\usepackage{fancyhdr}
+\pagestyle{fancy}
 
  % This handles the translation of unicode to latex:
 
@@ -35,6 +36,8 @@
  \DeclareUnicodeCharacter{8803}{\ensuremath{\overline{\equiv}}}
  \DeclareUnicodeCharacter{8718}{\ensuremath{\blacksquare}}
  \DeclareUnicodeCharacter{8759}{\ensuremath{::}}
+ \DeclareUnicodeCharacter{955}{\ensuremath{\lambda}}
+ \DeclareUnicodeCharacter{931}{\ensuremath{\Sigma}}
 
 
 \renewcommand{\baselinestretch}{1.2}
@@ -45,24 +48,23 @@
    {code}{Verbatim}
    {} % Add fancy options here if you like.
 \newcommand{\wit}[1]{\textit{#1}}
-\newcommand{\Agda}{\textbf{Agda }}
-\newcommand{\WHILE}{\textbf{WHILE }}
+\newcommand{\Agda}{\textit{Agda }}
+\newcommand{\WHILE}{\textit{WHILE }}
 \newcommand{\md}[1]{$\mathds{#1}$}
 
 %input macros (i.e. write your own macros file called mymacros.tex 
 %and uncomment the next line)
 %\include{mymacros}
 
-\title{Undecidability of\\[1ex]     %your thesis title,
-        The Halting Problem\\[1ex] %note \\[1ex] is a line break in the title
-	\Large A Formal Proof in Agda}   
+\title{The Undecidability of\\[1ex]     %your thesis title,
+        the Halting Problem\\[1ex] %note \\[1ex] is a line break in the title
+	\Large A Formal Proof in Agda }   
 
-\author{Zongzhe Yuan}             %your name
-\school{Computer Science}  %your school
+\author{Zongzhe Yuan: psyzy3}             %your name
 
 %\renewcommand{\submittedtext}{change the default text here if needed}
 \degree{Bachelor of Science}     %the degree
-\degreedate{May 2016}         %the degree date
+\degreedate{April 2016}         %the degree date
 
 %end the preamble and start the document
 \begin{document}
@@ -77,6 +79,12 @@
 
 
 \maketitle                  % create a title page from the preamble info
+
+\newpage\null\thispagestyle{empty}\newpage
+
+\lhead{\footnotesize\leftmark}
+\rhead{\thepage}                                                                 
+
 \include{acknowledgements}          % include the acknowledgements
 \include{abstract}          % include the abstract
 

@@ -1,17 +1,17 @@
-\chapter{Definition of \WHILE Language}
-The definition of \WHILE language used in the project are following the definition in the paper \wit{Computability and complexity: from a programming perspective} by \wit{Jones, Neil D} in 1997\cite{jones_computability_1997}.
-\section{Syntax of Expression}\label{appendix:syntax of expression}
+\chapter{Definition of the WHILE Language}\label{definition: while definition}
+The definition of \WHILE language used in the project follows the definition in the paper \wit{Computability and complexity: from a programming perspective} by \wit{Neil D. Jones} in 1997\cite{jones_computability_1997}.
+\section{Syntax of the Expression}\label{appendix:syntax of expression}
 Expressions \hspace{0.3cm}$\ni$\hspace{0.3cm} E, F\hspace{0.1cm} ::= X \hspace{0.98cm}(for X $\in$ Vars)\\
 \indent\hspace{4.2cm}$|$ $d$\hspace{1cm} (for atom $d$, one atom \wit{nil} defined in \Agda)\\
 \indent\hspace{4.2cm}$|$ \textbf{cons} E F\\
 \indent\hspace{4.2cm}$|$ \textbf{hd} E\\
 \indent\hspace{4.2cm}$|$ \textbf{tl} E\\
 \indent\hspace{4.2cm}$|$ \textbf{=?} E F\\
-\section{Syntax of Command}\label{appendix:syntax of command}
+\section{Syntax of the Command}\label{appendix:syntax of command}
 Commands \hspace{0.35cm}$\ni$\hspace{0.35cm} C, D\hspace{0.1cm} ::= X := E\\
 \indent\hspace{4.2cm}$|$ C \textbf{;} D\\
 \indent\hspace{4.2cm}$|$ \textbf{while} E \textbf{do} C\\
-\section{Semantics of Expression}\label{appendix:semantics of expression}
+\section{Semantics of the Expression}\label{appendix:semantics of expression}
 The definition of evaluation function $\upvarepsilon$ is: for $e \in \mathds{E}$ and a given \wit{store} of program $\mathds{P}$, $\sigma \in Store^{\mathds{P}}$, $\upvarepsilon \llbracket e \rrbracket \sigma = d \in \mathds{D}$.\\
 \indent\hspace{3cm}$\varepsilon \rrbracket$X$\rrbracket\sigma$ \hspace{1.5cm} = \hspace{0.3cm} $\sigma($X$)$\\
 \indent\hspace{3cm}$\varepsilon \llbracket$d$\rrbracket\sigma$ \hspace{1.58cm} = \hspace{0.3cm} d\\
@@ -19,16 +19,16 @@ The definition of evaluation function $\upvarepsilon$ is: for $e \in \mathds{E}$
 \indent\hspace{3cm}$\varepsilon \llbracket$hd E$\rrbracket\sigma$ \hspace{1cm} = \hspace{0.3cm} $\begin{cases} e & \mbox{if } \varepsilon \llbracket E \rrbracket\sigma = (e,f)\\ \mbox{nil} & \mbox{otherwise}\end{cases}$\\
 \indent\hspace{3cm}$\varepsilon \llbracket$tl E$\rrbracket\sigma$ \hspace{1.2cm} = \hspace{0.3cm} $\begin{cases} f & \mbox{if } \varepsilon \llbracket E \rrbracket\sigma = (e,f)\\ \mbox{nil} & \mbox{otherwise}\end{cases}$\\
 \indent\hspace{3cm}$\varepsilon \llbracket$=? E F$\rrbracket\sigma$ \hspace{0.6cm} = \hspace{0.3cm} $\begin{cases} \mbox{true} & \mbox{if } \varepsilon \llbracket E\rrbracket\sigma = \varepsilon \llbracket$F$\rrbracket\sigma\\ \mbox{false} & \mbox{otherwise}\end{cases}$
-\section{Semantics of Command}\label{appendix:semantics of command}
-The definition of the execution relationship is: for \wit{c} $\in \mathds{C}$, $c \vdash \sigma \rightarrow \sigma' \subseteq \mathds{C} \times Store^{\mathds{P}} \times Store^{\mathds{P}}$ where $\sigma'$ is the new \wit{environment} updated by the execution of command \wit{c}.\\
+\section{Semantics of the Command}\label{appendix:semantics of command}
+The definition of the execution relationship is: for \wit{c} $\in \mathds{C}$, $c \vdash \sigma \rightarrow \sigma' \subseteq \mathds{C} \times Store^{\mathds{P}} \times Store^{\mathds{P}}$ where $\sigma'$ is the new \wit{environment} updated by the execution of \wit{command} \wit{c}.\\
 X\textbf{:=}E $\vdash\sigma \rightarrow \sigma[$X $\mapsto$ d$]$ \hspace{1.15cm}if \hspace{0.2cm} $\varepsilon \llbracket E \rrbracket \sigma = $ d\\
 C\textbf{;}D $\vdash\sigma \rightarrow \sigma''$ \hspace{2.8cm}if \hspace{0.2cm} C $\vdash\sigma \rightarrow \sigma'$ and D $\vdash\sigma' \rightarrow \sigma''$\\
 \textbf{while} E \textbf{do} C $\vdash\sigma \rightarrow \sigma''$ \hspace{0.95cm}if \hspace{0.2cm} C $\varepsilon \llbracket E \rrbracket \sigma \neq $ nil, C $\vdash\sigma \rightarrow \sigma'$,\\ \indent\hspace{8.3cm}\textbf{while} E \textbf{do} C $\vdash\sigma' \rightarrow \sigma''$\\
 \textbf{while} E \textbf{do} C $\vdash\sigma \rightarrow \sigma$ \hspace{1.15cm}if \hspace{0.2cm} C $\varepsilon \llbracket E \rrbracket\sigma = $ nil\\
 
-\section{Example \WHILE program}\label{appendix:while example}
-Here we give an example code on \WHILE language and use the defined part to simulate the program. 
-\subsection{Example \WHILE program in \WHILE}
+\section{Example of the WHILE program}\label{appendix:while example}
+Here we give an example code on \WHILE language and use the defined part to execute the program. 
+\subsection{Example of the WHILE program in the WHILE model}
 The \WHILE program \textbf{concat} which could concatenate two list into one define as below:
 \begin{code}
 read X; (* X is (d.e) *)
@@ -43,8 +43,8 @@ read X; (* X is (d.e) *)
     B := tl B;
 write Y
 \end{code}
-\subsection{Example \WHILE program in \Agda}
-Here we construct the same program using the definition we defined in \textbf{Agda}, it should be the following format:
+\subsection{Example of the WHILE program in \Agda}
+Here we construct the same program using the definition we defined in \Agda, it should be in the following format:
 \begin{code}[fontsize=\footnotesize]
 append : P 4
 append = prog zero
@@ -70,8 +70,8 @@ append = prog zero
                (suc (suc (suc zero)) := tl (var (suc (suc (suc zero))))))))
              (suc zero)
 \end{code}
-\subsection{Execution of the example \WHILE program in \Agda}
-To run the program, we define three list (in format of \md{D}) in which \textbf{list1} and \textbf{list2} are the two input lists and \textbf{list3} is the result:
+\subsection{Execution of the Example \WHILE program in \Agda}
+To execute the program, we define three lists (in format of \md{D}) in which \textbf{list1} and \textbf{list2} are the two input lists and \textbf{list3} is the result:
 \begin{code}
 list1 : D
 list1 = ltod (1 :: 2 :: 3 :: [])
@@ -82,7 +82,7 @@ list2 = ltod (4 :: 5 :: 6 :: [])
 list3 : D
 list3 = ltod (1 :: 2 :: 3 :: 4 :: 5 :: 6 :: [])
 \end{code}
-Now we could execute the \textbf{WHILE} program using our definitions of syntax and semantics:
+Now we could execute the \textit{WHILE} program using our definitions of syntax and semantics:
 \begin{code}[fontsize=\footnotesize]
 runAppend : ExecP append (list1 ∙ list2) list3
 runAppend = terminate zero (suc zero)

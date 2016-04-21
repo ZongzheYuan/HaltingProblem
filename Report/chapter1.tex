@@ -1,98 +1,136 @@
 \chapter{Approach to the Project}
 
 \section{Overview}
-Alan Turing analysed and formalised the class of all computational procedure in 1936\cite{turing_computable_1936} which comes the famous computation model \wit{Turing machine}.
-Alan Turing used the model of \wit{Turing machine} to answer the question "Does a machine exist that can determine whether any arbitrary machine on its tape is 'circular'", and proved the undecidability of \wit{Halting problem} in 1936 as well\cite{turing_computable_1936} which is the object to this paper.\\
-To prove the undecidability of \wit{Halting problem}, one must use a computational model that is \wit{Turing-equivalent} to \wit{Turing machine} by \wit{Church-Turing thesis}\cite{copeland_church-turing_2002}.
-For simplicity, we choose a computational model that contains one \textit{input}, one \textit{output} and a \textit{Function} from \textit{input} to \textit{output}.
-We choose some proper data structure \textit{D} to represent the data and let the \textit{input} and \textit{output} belongs to \textit{D}.
-Then we could define the \textit{Function} as a relation $\bullet \rightarrow \bullet \subseteq$ \textit{D} $\times$ \textit{D} which is also the mapping from the \textit{input} to the \textit{output}.
-For the purpose of proving, we must construct this computational model with concrete syntax and semantics using some proof assistant language -- the meta language.\\
-Then we should constructing the universal model following the thesis of \wit{Turing-complete}\cite{copeland_church-turing_2002}.
-That is, if we have $f \in$ \textit{Function}, $input$ and $output$ $\in$ \textit{D}, and $f(input) \equiv output$, then the universal model $u$ has the property that $u(\lfloor f\rfloor \cdot input) \equiv output$ where $\lfloor f\rfloor$ is the code of \textit{Function} $f$ in data format \textit{D} and $\cdot$ is the concat symbol in the data structure \textit{D}.\\
-We must prove the correctness of out predefined universal computation model.
-During that proof, we should define the concrete code method to code the \textit{Function} into our predefined data structure \textit{D} without ambiguity.
-The first step in our proof is constructing the interpretation simulation step $s$ in the chosen meta language and proving the relation between the \textit{Function} \textit{f} and the interpretation simulation \textit{s}.
+\wit{Alan Turing} analysed and formalised the class of all computational procedure in 1936\cite{turing_computable_1936} when the well-known computational model \wit{Turing Machine} was introduced to the world.
+\wit{Alan Turing} has used the model of the \wit{Turing Machine} to answer the question "Does a machine exist that can determine whether any arbitrary machine on its tape is 'circular'", and proved the undecidability of the \wit{Halting problem} in 1936 as well\cite{turing_computable_1936}, which constitute the objective of this paper.\\
+To prove the undecidability of the \wit{Halting problem}, one must use a computational model that is \wit{Turing-equivalent} to the \wit{Turing Machine} in the thesis of the \wit{Church-Turing thesis}\cite{copeland_church-turing_2002}.
+To simplify, we choose a computational model that contains one \textit{input}, one \textit{output} and a \textit{function} from \textit{input} to \textit{output}.
+The detail definition will be shown in \ref{definition: while}.
+We choose some proper data structure \textit{D}, defined in \ref{definition: D}, to represent the data and let the \textit{input} and \textit{output} belongs to \textit{D}.
+Then we could define the \textit{function} (in \ref{definition: semantics}) as a relation $\bullet \rightarrow \bullet \subseteq$ \textit{D} $\times$ \textit{D} which is also the mapping from the \textit{input} to the \textit{output}.
+To prove the correctness of the relation, we must construct this computational model with concrete syntax and semantics by using some proof assistant language -- the meta language (in \ref{definition: syntax} and \ref{definition: semantics}).\\
+Then we should construct the universal model following the thesis of \wit{Turing-complete}\cite{copeland_church-turing_2002} (in \ref{universal-I}).
+That is, if we have $f \in$ \textit{function}, $input$ and $output$ $\in$ \textit{D}, and $f(input) \equiv output$, then the universal model $u$ has the property that $u(\lfloor f\rfloor \cdot input) \equiv output$ where $\lfloor f\rfloor$ is the code of \textit{function} $f$ in data format \textit{D} and $\cdot$ is the concat symbol in the data structure \textit{D}.\\
+In order to prove the correctness of our predefined universal computational model, we should define the concrete code method to code the \textit{function} into our predefined data structure \textit{D} without ambiguity (in \ref{definition: code}).
+The first step in our process is to construct the interpretation simulation step $s$ in the chosen meta language and prove the relation between the \textit{function} \textit{f} and the interpretation simulation \textit{s} (in \ref{definition: simulation}).
 We could define the interpretation simulation as a stack machine: $(Command,Stack,Variable) \Rightarrow (Command',Stack',Variable') \subseteq$ (\textit{D},\textit{D},\textit{D}) $\times$ (\textit{D},\textit{D},\textit{D}) which is a one-step relation between two triples.
-Then we should prove that if we have $f \in$ \textit{Function}, $input$ and $output$ $\in$ \textit{D}, and $f(input) \equiv output$, then we could get $(\lfloor f\rfloor,\epsilon,input) \Rightarrow^{*} (\epsilon,\epsilon,output)$ where $\Rightarrow^{*}$ is several steps relation of relation $\Rightarrow$.
-From the previous proof we know that we can using the meta language to simulate the one step of the \textit{Function} in several steps.
-Then we can construct the universal model, and prove that the interpretation step simulated in the meta language has correspondence to the interpretation in the universal model.
-If we have $f \in$ \textit{Function}, $input$ and $output$ $\in$ \textit{D}, and $(\lfloor f\rfloor,\epsilon,input) \Rightarrow^{*} (\epsilon,\epsilon,output)$, then the universal model $u$ has the property that $u(\lfloor f\rfloor \cdot input) \equiv output$.
-The proof is inducted by the step of relation $\Rightarrow$.
-Finally we can conclude that the program and the universal model has the correspondence that for $f \in$ \textit{Function}, $input$ and $output$ $\in$ \textit{D}, and $f(input) \equiv output$, then for the universal model $u$,  $u(\lfloor f\rfloor \cdot input) \equiv output$.\\
-To prove the undecidability of \wit{halting problem}, we could assume that there exists a program $h \in$ Program that has some properties: $\forall p \in$ Program and $\forall input \in$ Data, if $p$ halt on $input$, then $h(\lfloor p\rfloor \cdot input) \equiv 1$, else $h(\lfloor p\rfloor \cdot input) \equiv 0$, which means $h$ decide the \wit{halting problem}.
-Then we could construct a program $m \in$ Program and feed $h$ to $m$ which means run $h$ inside $m$.
-Then we let $h$ to decide $m(\lfloor m\rfloor)$ will halt or not, which will cause contradiction to the definition of $m$.
-Finally we could conclude that $h$ doesn't exists by contradiction, and there is no model that could decide the \wit{halting problem} which means the \wit{halting problem} is undecidable.
+Then we should prove that if we have $f \in$ \textit{function}, $input$ and $output$ $\in$ \textit{D}, and $f(input) \equiv output$, then we can get $(\lfloor f\rfloor,\epsilon,input) \Rightarrow^{*} (\epsilon,\epsilon,output)$ where $\Rightarrow^{*}$ is multistep relationship of relation $\Rightarrow$ (in \ref{definition: agda simulation}).
+From the proof given above we know that we can use the meta language to simulate the one step of the \textit{function} in several steps.
+Then we can construct the universal model, and prove that the interpretation step simulated in the meta language has correspondence to the interpretation in the universal model (in \ref{definition: while simulation}).
+If we have $f \in$ \textit{function}, $input$ and $output$ $\in$ \textit{D}, and $(\lfloor f\rfloor,\epsilon,input) \Rightarrow^{*} (\epsilon,\epsilon,output)$, then the universal model $u$ has the property that $u(\lfloor f\rfloor \cdot input) \equiv output$.
+The proof is inducted by the step of relation $\Rightarrow$ (in \ref{definition: simulation proof}).
+Finally we can conclude that the program and the universal model has the correspondence that for $f \in$ \textit{function}, $input$ and $output$ $\in$ \textit{D}, and $f(input) \equiv output$, then for the universal model $u$,  $u(\lfloor f\rfloor \cdot input) \equiv output$.\\
+To prove the undecidability of the \wit{Halting Problem}, we can assume that there exists a program $h \in$ Program that has some properties: $\forall p \in$ Program and $\forall input \in$ Data, if $p$ halt on $input$, then $h(\lfloor p\rfloor \cdot input) \equiv 1$, else $h(\lfloor p\rfloor \cdot input) \equiv 0$, which means $h$ decides the \wit{Halting Problem}.
+Then we can construct a program $m \in$ Program and feed $h$ to $m$ which means running $h$ inside $m$.
+Then we let $h$ to decide whether $m(\lfloor m\rfloor)$ will halt or not, which will end up in contradiction with the definition of $m$.
+The construction and the proof could be found in \ref{definition: halting problem}.
+Finally we can conclude that $h$ doesn't exists by contradiction to our premise, and there is no model that can decide the \wit{Halting Problem}, which otherwise means that the \wit{Halting Problem} is undecidable.
 
 \section{Background}
-\subsection{Church-Turing Thesis}
-\wit{Church-Turing thesis} is a hypothesis about the nature of computable functions\cite{church_unsolvable_1936}.
-The thesis states that every effective computation can be carried out by a \wit{Turing machine}\cite{copeland_church-turing_2002}.
-Turing gave the definition of his thesis as the LCMs [logical computing machines: Turing's expression for \wit{Turing machines}] can do anything, that could be described as "rule of thumb" or "purely mechanical" (Turing 1948:7.)\cite{copeland_church-turing_2002}.\\
-The two basic concept that related to this paper are \wit{Turing completeness} and \wit{Truing equivalence}.
-\paragraph{Turing completeness} is the concept in computability theory, such that a computational model (for example a programming language, or recursive function) is Turing complete if and only if the model could be used to simulate any single-taped \wit{Turing machine}\cite{rogers_theory_1987}.
-\paragraph{Truing equivalence} said if two computational model could simulate each one by the other, then these two computational machine is \wit{Turing equivalence}\cite{rogers_theory_1987}.\\
-By \wit{Church-Turing Thesis}, any function that can be computed by some algorithm can be computed by a \wit{Turing machine}\cite{church_unsolvable_1936}.
-Thus there are many computational models that is \wit{Turing equivalent} to a \wit{Truing machine}\cite{copeland_church-turing_2002}.
-Though the goal of the project is to prove the undecidability of \wit{halting problem}, constructing and formalise a universal \wit{Turing machine} is quite complex. 
-Thus we can choose many other notions of effective procedure than \wit{Turing machine} (means that the notion is \wit{Turing-complete}):
+\subsection{The Church-Turing Thesis}
+The \wit{Church-Turing thesis} is a hypothesis about the nature of computable functions\cite{church_unsolvable_1936}.
+The thesis states that every effective computation can be carried out by a \wit{Turing Machine}\cite{copeland_church-turing_2002}.
+Turing gave the definition of his thesis as the LCMs [logical computing machines: Turing's expression for \wit{Turing Machines}] can do anything, that could be described as "rule of thumb" or "purely mechanical" (Turing 1948:7.)\cite{copeland_church-turing_2002}.\\
+The two basic concepts that related to this paper are the \wit{Turing completeness} and the \wit{Turing equivalence}.
+\paragraph{Turing completeness} is the concept in the computability theory, such a computational model (for example a programming language, or recursive function) may satisfy \wit{Turing completeness} if and only if the model could be used to simulate any single-taped \wit{Turing Machine}\cite{rogers_theory_1987}.
+\paragraph{Turing equivalence} said that if two computational models could simulate each one by the other, then these two computational machine is called \wit{Turing equivalence}\cite{rogers_theory_1987}.\\\\
+By the \wit{Church-Turing Thesis}, any function that can be computed by some algorithm can be computed by a \wit{Turing Machine}\cite{church_unsolvable_1936}.
+Thus there are many computational models that is \wit{Turing equivalent} to a \wit{Turing Machine}\cite{copeland_church-turing_2002}.
+Though the goal of the project is to prove the undecidability of the \wit{Halting Problem}, constructing and formalising a universal \wit{Turing Machine} is quite complex. 
+Thus we can choose many other notions of effective other than the \wit{Turing Machine} (means that the notion is \wit{Turing-complete}):
 \begin{itemize}
-  \item Recursive functions as defined by Kleene \cite{yasuhara_recursive_1971}
-  \item The lambda calculus approach to function definitions due to Church \cite{moggi_computational_1988}
-  \item Random access machines \cite{cook_time-bounded_1972}
+  \item Recursive functions as defined by Kleene\cite{yasuhara_recursive_1971}
+  \item The lambda calculus approach to function definitions due to Church\cite{moggi_computational_1988}
+  \item Random access machines\cite{cook_time-bounded_1972}
   \item Markov algorithms\cite{_markov_2015}
 \end{itemize}
-Considering those different formalism which have the same efficient computing module, there are several common characteristics\cite{jones_computability_1997}.
+These different forms that contain same efficient computing modules share several common characteristics\cite{jones_computability_1997}.
 \begin{itemize}
-  \item The procedure consist of finite size of instructions.
-  \item The computation is carried out in a discrete stepwise fashion but not continuous methods or analogue devices.
-  \item The computation is carried out deterministically but not random methods.
-  \item Though a terminating computation must not rely on an infinite amount of space or time, there is no bound on the amount of memory storage space or time available.
+  \item The procedure consists of finite size of instructions.
+  \item The computation is carried out in a discrete stepwise fashion but not in the method of continuous methods with analogue devices.
+  \item The computation is carried out deterministically but not in random methods.
+  \item Though a terminating computation must not rely on infinite amount of space or time, there is no limitation set for the amount of memory storage space or time available.
 \end{itemize}
-\paragraph{Universal Turing Machine} is a Turing machine that can simulate an arbitrary \wit{Turing machine} on arbitrary input\cite{_universal_2016}. 
-That is for $t \in$ \textbf{TM}, $input$ and $output$ $\in \Sigma^{*}$ (the set of input symbols on Kleene star\cite{jiraskova_kleene_2013}) , and $t(input)$ yields $output$, then the universal turing machine $u\in$ \textbf{UTM} has the property that $u(\lfloor t\rfloor \cdot input)$ yields $output$ where $\lfloor t\rfloor$ is the code of \textit{Turing Machine} $t$.\\
-Those computational model listed above have been proved to be \wit{Turing-equivalence} to the \wit{Turing machine}, which means they also have the property of \wit{Turing completeness} and could construct universal computational model.
+Those computational model listed above have been proved to be \wit{Turing-equivalence} to the \wit{Turing Machine}, which means they also have the property of \wit{Turing completeness} and can construct universal computational model.
+\paragraph{Universal Turing Machine} is a Turing Machine that can simulate an arbitrary \wit{Turing Machine} on arbitrary input\cite{_universal_2016}. 
+That is for $t \in$ \textbf{TM}, $input$ and $output$ $\in \Sigma^{*}$ (the set of input symbols on Kleene star\cite{jiraskova_kleene_2013}) , and $t(input)$ yields $output$, then the universal \wit{Turing Machine} $u\in$ \textbf{UTM} has the property that $u(\lfloor t\rfloor \cdot input)$ yields $output$ where $\lfloor t\rfloor$ is the code of \textit{Turing Machine} $t$.
 
 \subsection{Decidable and Non-Decidable}
 In the area of computability, a set \textbf{S} is \textbf{Recursive} (\textbf{Decidable}) $\iff$ given a set \textbf{D} and \textbf{S} $\in$ \textbf{D}, there is a function $f$ applies to the element $a \in$ \textbf{D},
 $f$ will return "true" if $a \in$ \textbf{S} and $f$ will return "false" if $a \notin$ \textbf{S}\cite{jones_computability_1997}.
-\textbf{Decidable} set is closed under union, intersection, complement difference and Kleene star\cite{_recursive_2015}.\\
+\textbf{Decidable} set is closed under union, intersection, complement difference and Kleene star\cite{_recursive_2015} circumstances.\\
 A set \textbf{S} is \textbf{Recursively Enumerable} (\textbf{Semi-Decidable}) $\iff$ given a set \textbf{D} and \textbf{S} $\in$ \textbf{D}, there is a function $f$ applies to the element $a \in$ \textbf{D},
 $f$ will return "true" if $a \in$ \textbf{S} and $f$ will return "false" or never terminate if $a \notin$ \textbf{S} which means no guarantee to terminate under the element $a \notin$ \textbf{S}\cite{jones_computability_1997}.
 If a set \textbf{S} is recursively enumerable and the implement of \textbf{S} is also recursively enumerable, then set \textbf{S} is Recursive\cite{_recursively_2015}.
 
-\subsection{Halting Problem}
+\subsection{The Halting Problem}
 \label{definition of h}
-In area of computability theory, the \textit{Halting Problem} is the problem that a given universal computing program (the model that is \wit{Turing-complete} \cite{jones_computability_1997}) 
-could determine any other arbitrary computing program that would return the result on arbitrary input in a finite number of steps (a finite amount of time), or would run forever \cite{_halting_2015}.
-That is, $\forall t \in$ \textbf{TM}, $input \in \Sigma^{*}$, if there exists $h \in$ \textbf{TM} such that, if $halt_{t}(input)$, then $h(\lfloor t\rfloor \cdot input) \equiv true$, else $h(\lfloor t\rfloor \cdot input) \equiv false$, then $h$ determining the \wit{halting problem}.\\
-It is easily to prove that \wit{halting problem} is semi-decidable\cite{_halting_2015} because $\forall t \in$ \textbf{TM}, $input \in \Sigma^{*}$, if eventually $halt_{t}(input)$ then we can easily get the result.
-However whether the halting problem is decidable or not is interesting, and to prove the undecidable of the \wit{halting problem} is the main target of this paper.
+In the area of computability theory, the \textit{Halting Problem} indicates that a given universal computing program (the model that is \wit{Turing-complete}\cite{jones_computability_1997}) 
+may determine any other arbitrary computing program that would return the result on arbitrary input in a finite number of steps (a finite period of time), or would run forever\cite{_halting_2015}.
+That is, $\forall t \in$ \textbf{TM}, $input \in \Sigma^{*}$, if there exists $h \in$ \textbf{TM} such that, if $halt_{t}(input)$, then $h(\lfloor t\rfloor \cdot input) \equiv true$, else $h(\lfloor t\rfloor \cdot input) \equiv false$, then $h$ determining the \wit{Halting Problem}.\\
+It is easily to prove that the \wit{Halting Problem} is semi-decidable\cite{_halting_2015} because $\forall t \in$ \textbf{TM}, $input \in \Sigma^{*}$, if eventually $halt_{t}(input)$ then we can easily get the result.
+However whether the \wit{Halting Problem} is decidable or not is interesting, and the aims to this paper is to prove the undecidable of the \wit{Halting Problem}.
 
-\subsection{WHILE language}
-The \textbf{WHILE} language is a language that has just the right mix of expressive power and simplicity. 
-It has strict definition of syntax and semantics. And it has the same computing effective level of \wit{Turing machine} model (Turing-complete)\cite{jones_computability_1997}. 
-And also the data structure of \WHILE treat the program as data object which could sole some rather complex missions. 
-Furthermore with the simplicity, \WHILE language could simply be used to prove many theorems and their behaviours. 
-By considering those several reasons, the project will focus on proving the \wit{halting problem} undecidability on the model of \WHILE language\cite{jones_computability_1997}.
+\subsection{The WHILE language}
+The \textit{WHILE} language is a language that was just the right mixture of expressive power and simplicity. 
+It provides the strict definitions of syntax and semantics and stays in the same level with \wit{Turing Machine} model in terms of computing effectiveness (Turing-complete)\cite{jones_computability_1997}. 
+As well the data structure of \WHILE treats the program as data object which could solve some rather complex missions. 
+Furthermore, with the simplicity, \WHILE language could be simply used to prove many theorems and their behaviours. 
+By considering those several reasons, the project will focus on proving the \wit{Halting Problem} undecidability in the model of \WHILE language\cite{jones_computability_1997}.
+The definition of the \WHILE language can be found in appendix \ref{definition: while definition}.
+The implementation of the \WHILE language in \Agda can be found in \ref{definition: while}.
 
 \subsection{Agda}
-\textbf{Agda} is a dependently type language\cite{norell_dependently_2009} that is an interactive proof assistant whichimplements Martin-Löf type theory\cite{van_oosten_homotopy_2014}, which could aids me to formalise a proof of the Halting problem. 
-Because dependent types allows types to talk about values, the program written by those language could be encoded properties of values as types whose elements are proofs that theproperty is true, which means that a dependently typed programming language can be used as a logic, and is needed to be total, not crash or non-terminate.
-And mathematical proofs in \textbf{Agda} are written as structurally induction format, which are recursive functions that induce on some inductive type argument.
-Thus, by constructing some well-typed function that could finally terminate is equivalent to prove some mathematical proof.
-There for, \textbf{Agda} can be used as a framework to formalise formal logic systems and to prove the lemma which could be proved in mathematical.
+\Agda, a dependent type language and an interactive proof assistant thatimplements the Martin-Löf type theory\cite{van_oosten_homotopy_2014}, could assist me to develop a machine checked proof and formalise the proof of the \wit{Halting Problem}. 
+Because the \wit{dependent type} allow types to talk about values, the programs written by those languages could be encoded properties of values as types whose elements are proofs that theproperty is true, which means that a dependently typed programming language can be used as a logic, and is needed to be integrated, not crash or non-terminate.
+And the mathematical proofs in \Agda are written as structurally induction format, which are recursive functions that inducing on some inductive type argument.
+Thus, it is equivalent to give mathematical proof by constructing some well-typed function that could finally terminate.
+Therefore, \Agda can be used as a framework to formalise formal logic systems and to prove the lemma which can be proved in mathematical ways.\\
+We can use the key word \textbf{data} in \Agda to define some inductive types, or more generally define some inductive families.
+Here we define the basic type \wit{natural number} as an example.
+\begin{code}
+data ℕ : Set where
+  zero : ℕ
+  suc  : ℕ → ℕ
+\end{code}
+Then we can define the function \wit{plus} based on the \wit{natural number}.
+\begin{code}
+_+_ : ℕ → ℕ → ℕ
+_+_ zero b = b
+_+_ (suc a) b = suc (a + b)
+\end{code}
+Finally we can prove the \wit{associative	law} of our defined function by doing induction on the first argument, which is an inductive type in our definition.
+\begin{code}[fontsize=\footnotesize]
+suc-ok :  {a b : ℕ} → suc a + b ≡ suc (a + b)
+suc-ok {zero} = refl
+suc-ok {suc a} = cong suc refl
+
+plus-asso : {a b c : ℕ} → (a + b) + c ≡ a + (b + c)
+plus-asso {zero} = refl
+plus-asso {suc a}{b}{c} = (suc a + b) + c
+                        =⟨ cong (λ x → x + c) (suc-ok {a}{b}) ⟩
+                        suc (a + b) + c
+                        =⟨ suc-ok {a + b}{c} ⟩
+                        (suc ((a + b) + c))
+                        =⟨ cong suc (plus-asso {a}{b}{c}) ⟩
+                        suc (a + (b + c))
+                        ∎
+\end{code}
+Using \Agda as the proof assistant language to this project has a lot of advantages.
+Another convenient virtue is that we can use Unicode characters while we write program in \Agda, which let the proofs in \Agda look similar to those logic proofs on paper and on textbooks.\\
+The concept and those basic technique of \Agda could be found in the book \wit{Dependently Typed Programming in Agda} by \wit{Ulf Norell and James Chapman} in 2009\cite{norell_dependently_2009}.
 
 \section{Related Work}
-\subsection{Proof By Contradiction}
-In 1936, Alan Turing has proved that a general algorithm to solve the halting problem for all possible program-input pairs cannot exist.\cite{_halting_2015}\\
-The \wit{halting problem} could be proved by contradictory. 
+\subsection{Prove the Undecidability of the Halting Problem}
+In 1936, \wit{Alan Turing} has proved that a general algorithm to solve the \wit{Halting Problem} for all possible program-input pairs cannot exist\cite{_halting_2015}.\\
+To prove the undecidability of the \wit{Halting Problem}, we firstly assume that there exists some computational models that could decide the \wit{Halting Problem}, then we can found some contradiction which prove that there is no
+computational model that could decide the \wit{Halting Problem}, which means the \wit{Halting Problem} is undecidable. 
 We could represent the decision problems as the set of objects that have the property in question.\\
-Then the \wit{halting problem} could be represent as halting set $H = \{(p,inp)|$ program $p$ halts when run on input $inp\}$. 
-Then we could prove that the following function $h$ is not computable which means there is no total computable function which could decide whether an arbitrary program $p$halts on arbitrary input $inp$\cite{_computability_2015}:\\
-\label{definition of U}Suppose there exists a \wit{Turing machine} which could decide the \wit{halting problem}: $h (i,x) = \begin{cases} 1, & \mbox{if program }i\mbox{ halts on } x \\ 0, & \mbox{otherwise}\end{cases}$.
-Then we construct a universal \wit{Turing machine} $u (x)$ which could take the binary code of another \wit{Turing machine} as input such that inside $u$ we run $h$ on $(x, x)$ 
-and if the result of $h$ is $1$ then $u$ will loop forever, otherwise $u$ will halt. The last step is we run $u$ on $\lfloor u\rfloor$ that is the binary code ofthe \wit{Turing machine} $u$, which means inside $u$ \wit{Turing machine} $h$ will run on $(\lfloor u\rfloor,\lfloor u\rfloor)$. 
-Nevertheless, if the universal \wit{Turing machine} $u$ finally halt on its binary code, then the \wit{Turingmachine} $h$ will return 1, nevertheless $u$ will loop forever by the definition of \wit{Turing machine} $u$.Thus, $u$ can’t halt on its binary code, however in which situation $h$ will return 0 which means $u$ will halt finally. 
-By conclusion, there is no universal \wit{Turing machine} that could decide the \wit{halting problem} which proved by contradictory \cite{_halting_2015}.
+Then the \wit{Halting Problem} could be represent as the halting set $H = \{(p,inp)|$ program $p$ halts when it runs on input $inp\}$. 
+Then we could prove that the following function $h$ is not computable which means there is no total computable function that may decide whether an arbitrary program $p$halts on arbitrary input $inp$ or not\cite{_computability_2015}:\\
+\label{definition of U}Suppose there exists a \wit{Turing Machine} which could decide the \wit{Halting Problem}: $h (i,x) = \begin{cases} 1, & \mbox{if program }i\mbox{ halts on } x \\ 0, & \mbox{otherwise}\end{cases}$.
+Then we construct a universal \wit{Turing Machine} $u (x)$ which could take the binary code of another \wit{Turing Machine} as input such that inside $u$ we run $h$ on $(x, x)$ 
+and if the result of $h$ is $1$ then $u$ will loop forever, otherwise $u$ will halt. Lastly, we run $u$ on $\lfloor u\rfloor$ that is the binary code ofthe \wit{Turing Machine} $u$, which means inside $u$ \wit{Turing Machine} $h$ will run on $(\lfloor u\rfloor,\lfloor u\rfloor)$. 
+Nevertheless, if the universal \wit{Turing Machine} $u$ finally halt on its binary code, then the \wit{Turingmachine} $h$ will return 1, but $u$ will loop forever by the definition of \wit{Turing Machine} $u$.Thus, $u$ can’t halt on its binary code. 
+However in that situation $h$ will return 0 which means $u$ will halt finally. 
+In conclusion, there is no universal \wit{Turing Machine} that could decide the \wit{Halting Problem} which can be proved by finding the contradiction to the assumption\cite{_halting_2015}.

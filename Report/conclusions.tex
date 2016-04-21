@@ -1,20 +1,86 @@
-\chapter{Evaluation, Summary and Futher Work}
+\chapter{Evaluation, Summary and Further Work}
 
-\section{Evaluation to the Project}
+\section{Evaluation and Summary}\label{summary}
+This dissertation implements a formalisation of the \wit{Turing-complete} computational model \WHILE program, and the proof of the undecidability of the \wit{Halting Problem} in \wit{Agda}.
+It also helps readers to understand the \wit{Church-Turing Thesis}, the \wit{Turing Machine}, the universal computational model.
+Above all, it presents an accessible proof of the undecidability of the famous problem -- the \wit{Halting Problem}, and explains the details on how we can assume a hypothetical model and derive \wit{false} from our assumption.\\
+The idea of the \wit{Turing-complete} model -- \WHILE language follows \wit{Neil D. Jones}'s work in the paper \wit{Computability and Complexity: from a Programming Perspective}\cite{jones_computability_1997}, 
+including a lot of personal effort and intelligence on the definition of the \WHILE model in \Agda and the construction of the universal \WHILE program in \wit{Agda}.
+The idea of the correctness of the universal \WHILE model is obvious because the \WHILE language satisfies the \wit{Turing-complete} property.
+However, to prove the correctness of the universal \WHILE model is extremely hard.
+The core part of the project is to find the correspondence between the execution of the \WHILE program on some input and the universal \WHILE program which takes the previous program as part of the argument.
+With the help of Dr Thorsten Altenkirch, the supervisor of this project, I developed an inspired idea which constructed the intermediate \Agda interpretation step.
+Based on the intermediate \Agda interpretation step, I constructed the relationship between the execution of the \WHILE program and the universal \WHILE program.
+Additionally, the idea of the proof of the undecidability of the \wit{Halting Problem} follows some of the \wit{Alan Turing}'s work\cite{_halting_2015}.
+I also develop my own version of the proving process and the details can be found in \ref{definition: halting problem}.
+Since our constructed \WHILE program \wit{U} must take the code of some other programs as the input, the argument to the hypothetical \WHILE program \wit{h} (the program presumable can decide the \wit{Halting Problem}) can't just follow the proof on paper\cite{_halting_2015}.
+Furthermore, I also abstract the proof on propositional level which can be found in \ref{definition: propositional proof}.\\
+There are two aspects that using \Agda to do this project. One is to develop a machine checked proof of the undecidability of the \wit{Halting Problem}.
+The \wit{Halting Problem} is such a famous problem that almost all the people who worked around with computer science are familiar with.
+However, people can only find the idea of the proof of the undecidability of the \wit{Halting Problem} theoretically.
+There is no strict proof using \wit{Agda}, the interactive proof assistant language, which should formalise a computational model is \wit{Turing-complete} and use that model to derive the problem.
+That is, proving the undecidability of the \wit{Halting Problem} on paper theoretically is easy by following the idea of the \wit{Alan Turing}'s work\cite{_halting_2015}, 
+but deriving the machine checked proof of the same problem is considerably difficult.
+The understanding of the method to construct the \wit{Turing-complete} computational model and prove the correctness of that model, and the construction of the machine checked proof of the undecidability of the \wit{Halting Problem}
+will help people know the details of the \wit{Church-Turing Thesis}, the computational model and the \wit{Halting Problem} distinctly instead of wandering at an abstract and theoretical level. 
+The second aspects is that using \Agda as the interactive proof assistant language has a lot of advantages.
+Since \Agda allows us to use Unicode characters while we write programs in \wit{Agda} and that may lead to the proofs in \Agda look similar to those logic proofs on paper and textbooks.
+Thus, readers can go through the whole proof plainly.
+Combining with the previous aspect, people can read each line of the proof in depth as well as understand the idea of the construction of the machine checked proof, the general as well as the detail idea of the proof.
+Besides, \Agda can automatically infer the type of the implicit argument (although sometimes which will cause the compilation of the program a little bit slow), pattern match on the inductive argument conveniently and show the type of each variable to the current goal.
+Furthermore, \Agda can compute the type of the goal based on the definition of the function and current procedure of the program, check whether the provided 'answer' matches the type to the goal or not, 
+and update the type to the consequence goals if some goals have been completed.
+Furthermore, lots of convenient built-in functions and the standard \Agda library help me a lot, and make the whole machine checked proof to the problem much easier.\\
+The management to the project follows the plan proposed at the beginning of this academic year. 
+I used \wit{GitHub} as the program revision control and source code management system to manage the project.
+I determined the object to the project at the end of last summer vacation after I went through \wit{Neil D. Jones}'s paper and the \Agda tutorial\cite{jones_computability_1997}\cite{norell_dependently_2009}.
+I started the project earlier than almost all the other people, and finished the construction of the \WHILE language and the universal \WHILE model in \Agda before Christmas.
+Then I struggled with the proof of the correctness of the universal \WHILE model for two months.
+At the beginning of this semester, I worked out a possible solution to the previous problem, and rushed the project along with the final proof of the undecidability of the \wit{Halting Problem} in one month under Ambrus's help.
+I finished the code to the project at the beginning of March, and uploaded the final work to \wit{GitHub}.
+Then I spent three weeks working out the final report of the project.
+Along my way, I insulted and made formal visits to my supervisor Altenkirch Thorsten once a week formally, and always talked to Ambrus Kaposi and Gabe Dijkstra to work out solution to the project all the time.
+Without their help, I can not finish the project on time.
+I learnt a lot from the procedure of the project, including the knowledge and technique to \wit{Agda}, the knowledge in the area of the computability.
+Furthermore, I also figure down the way of managing a project, and manage my time to the project.
+During the process, my communication and writing skills have been improved a lot. 
+Above all, this project means a lot to me and becomes one of the most significant parts of my undergraduate studys.
 
-\section{Summary and Conclusion}
+\section{Main Difficulties}
+Since the main object -- the \wit{Halting Problem} to this project is a famous theoretical topic that is relevant to the computational theorem in computer science, 
+and in our knowledge this project is the project that first time successfully formalised a \wit{Turing-complete} computational model, and proved the undecidability of the \wit{Halting Problem} in \Agda,
+this project contains many difficulties and uncertainties.\\
+Initially, choosing a proper computational model will determine the difficulty of the whole project.
+Constructing a \wit{Turing Machine} in \Agda is still hard even with the help of \Agda as the interactive proof assistant language.
+I had also considered the \wit{lambda-calculus} as the computational model in the proof.
+Finally I choose the \WHILE language and the result shows that this was a wise decision.\\
+Then proving the correctness of the universal \WHILE program is the core of the project, and it is thoroughly hard.
+As I said in \ref{summary} I found the intermediate step between the \WHILE program and the universal \WHILE model.
+In addition, even with the intermediate step, finding the relationships between \WHILE and the intermediate step, and the relationships between the intermediate step and the universal \WHILE model are still difficult.
+The execution of the \wit{command} is a partial function and is implemented as a relationship in \wit{Agda}.
+The interpretation of the \wit{WHILE} program in \Agda will violate the termination checker because of the possible situation of the infinite \wit{while} loop.
+That is the reason I do induction on the \wit{call tree} in the proof.
+Additionally, the one step relation between the intermediate step and the universal \WHILE model is the most difficult part in the project.
+Initially I used a lot of implicit arguments, which caused \Agda crashing on the calculation of the type inference.
+I used about thirty separate files, each file contains a helper function, including almost 4000 lines of code to finish that proof, which troubled me for two months.
+The final proof of the correctness of the universal \WHILE model was too hard to prove at once, so I separated it into several steps which only makes it little bit easier.\\
+Finally, the proof of the undecidability of the \wit{Halting Problem} is really difficult.
+Since \Agda will automatically compute the type of the goal, and expand the definition it currently used, it will cost hours of time to check the type of the goal.
+Without the abstraction to the final proof, I can hardly know the target of the final proof.
+For those reasons, the final proof is derived without auto goal type checking and auto goal type inference, and come down to a lot of basic logical rules, which makes it the one of the most difficult part in this machine checked proof.
 
-\section{Future Work}
-\subsection{WHILE Program Variables Transformation}
-The universal \WHILE program defined in \ref{universal-I} could only simulate the \WHILE program that has only one variable.
-Thus the final proof could only say that a machine \wit{h} which has only one variable that could \wit{decide} the \wit{halting problem} is \wit{false}.
-However the \WHILE program that has only one variable (we name it as \textbf{WHILE-I} program) has the same computation ability compare to the \WHILE program that has many variables.
-That means, the number of variable to the \WHILE program doesn't matter, and doesn't violate the property of \wit{Turing-completeness} to the \WHILE program.
-However, because \Agda has strict type, the program must know its variable number before it has been defined.
-Thus, we can construct some rules to transform the \WHILE program to \textbf{WHILE-I} program and prove that they have the same effect, 
-which means for \wit{p} $\in$ \md{P} $n$ and \wit{input}, \wit{output} $\in$ \md{D}, $p(input)$ yielding $output$ implies that $\exists$ $p-I$ $\in$ \md{P} $1$, $p-I(input)$ yielding $output$.\\
-Initially we should transform the \wit{environment} of the program from \textbf{Vec D n} to \textbf{Vec D 1}, which means accumulate all the variables in the first \wit{environment} to the first element in the second \wit{environment} by the operator $\cdot$.
-For example, initially we have \wit{environment} of five variables: (\wit{A :: B :: C :: D :: E ::[]}), then the transformation will construct a tree structure data for the first element of the new \wit{environment}:\\\\
+\section{Further Work}
+\subsection{WHILE Program Variables Transformation}\label{future work}
+The universal \WHILE program defined in \ref{universal-I} can only simulate the \WHILE program that has only one variable.
+Thus the final proof can only be used in a condition when machine \wit{h} has only one variable. 
+Under certain circumstances, it then leads to the decision that the \wit{Halting Problem} is \wit{undecidable}.
+Additionally, the \WHILE program that has only one variable (we name it as \textbf{WHILE-I} program) has the same computation ability compared to the \WHILE program that has many variables.
+That means, the number of variables to the \WHILE program does not matter actually, and doesn't violate the property of \wit{Turing-completeness} to the \WHILE program.
+However, since \Agda has strict type, the program must know the number of its variables before it was defined.
+Thus, we can construct some rules to transform the \WHILE program to the \textbf{WHILE-I} program and prove that they have the same effect, 
+which means that for \wit{p} $\in$ \md{P} $n$ and \wit{input}, \wit{output} $\in$ \md{D}, $p(input)$ yielding $output$ implies that $\exists$ $p$-$I$ $\in$ \md{P} $1$, $p$-$I(input)$ yielding $output$.\\
+Initially we should transform the \wit{environment} of the program from \textbf{Vec D n} to \textbf{Vec D 1}, which means accumulating all the variables in the first \wit{environment} to the first element in the second \wit{environment} by the operator $\cdot$.
+For example, initially we have an \wit{environment} of five variables: (\wit{A :: B :: C :: D :: E ::[]}), then the transformation will construct a tree structure data for the first element of the new \wit{environment}:\\\\
 \begin{tikzpicture}[sibling distance=10em,
   every node/.style = {shape=rectangle,
     draw, align=center,
@@ -33,14 +99,14 @@ For example, initially we have \wit{environment} of five variables: (\wit{A :: B
 \end{tikzpicture} \textbf{\wit{:: []}}\\
 Then we can transform the \wit{expression}. 
 For the \wit{expression} of \wit{head}, \wit{tail}, \wit{cons}, \wit{nil} and \wit{equality}, we can easily recursively transform the target \wit{expression} from the argument.
-For the \wit{expression} that use the value of variable that in the \wit{environment}, for example \wit{var C} in our previous example, we can use the \wit{expression} \wit{head (tail (tail (var zero)))} to get the same value from the transformed \wit{1} variable environment.\\
+For the \wit{expression} that use the value of variable that in the \wit{environment}, for example \wit{var C} in our previous example, we can use the \wit{expression} \wit{head (tail (tail (var zero)))} to get the same value as the transformed \wit{1} variable environment.\\
 Then similarly we can transform the \wit{command}.
 For the \wit{command} of \wit{sequence} and \wit{while} loop, we can easily recursively transform the target \wit{command} from the argument.
-For the \wit{expression} of \wit{assignment}, for example we assign variable \wit{C} with value \wit{K} $\in$ \md{E}, the \wit{environment} with five variables updated as:
+For the \wit{expression} of the \wit{assignment}, for example if we assign variable \wit{C} with value \wit{K} $\in$ \md{E}, the \wit{environment} with five variables would update as:
 \begin{center}
 (\wit{A :: B :: C :: D :: E ::[]}) $\Longrightarrow$ (\wit{A :: B :: \textbf{K} :: D :: E ::[]})
 \end{center}
-Then we can write the new \wit{assignment} \wit{command} as \\
+we can write the new \wit{assignment} \wit{command} as \\
 $zero$ $:=$ $(hd$ $(var$ $zero))$ $\cdot$ $((hd$ $(tl$ $(var$ $zero)))$ $\cdot$ $((K)$ $\cdot$ $(tl$ $(tl$ $(tl$ $(var$ $zero))))))$ and\\\\
 \begin{tikzpicture}[sibling distance=4em,
   every node/.style = {shape=rectangle,
@@ -78,16 +144,16 @@ Finally we can transform the \wit{program}.
 We should transform the initial \wit{environment} at first.
 Then we can transform the \wit{command}.
 Finally we should get the result from the transformed \wit{environment}.\\
-The proof of the correctness of the transformation will be held in the future.
-\subsection{Interpret WHILE Program with Arbitrary Variables}
+The proof of the correctness of the transformation will be achieved in the future.
+\subsection{Interpretation of the WHILE Program with Arbitrary Variables}
 If we can prove that the \WHILE program has the same computation ability with \textbf{WHILE-I} program which has only one variable,
-we could conclude that our universal \WHILE program defined in \ref{universal-I} could simulate the \WHILE program has arbitrary variables.
+we can conclude that our universal \WHILE program defined in \ref{universal-I} can simulate the \WHILE program with arbitrary variables.
 For example, for \wit{p} $\in$ \md{P} $n$ and \wit{input}, \wit{output} $\in$ \md{D}, if we want to use our universal \WHILE program to simulate $p(input)$,
-then we could transform $p$ to $p-I$ which has only one variable by our predefined transformation function.
-And we know that $p(input)$ yielding $output$ implies that $p-I(input)$ yielding $output$ by the proof of correctness of the transformation function.
-And by the proof of the correctness of the universal \WHILE program we know that $p-I(input)$ yielding $output$ implies that $u(\lfloor p-I\rfloor \cdot input)$ yielding $output$.
-Thus we can conclude that for \wit{p} $\in$ \md{P} $n$ and \wit{input}, \wit{output} $\in$ \md{D}, $p(input)$ yielding $output$ implies $u(\lfloor p-I\rfloor \cdot input)$ yielding $output$ which means universal \WHILE program defined in \ref{universal-I} could simulate the \WHILE program has arbitrary variables.\\
-Thus for the proof of \wit{halting problem}, we could say that for \wit{p} $\in$ \md{P} $n$, \wit{h} could decide the \wit{halting problem} implies \wit{false}.
+then we should transform $p$ to $p$-$I$ which has only one variable by our predefined transformation function.
+And we know that $p(input)$ yielding $output$ implies that $p$-$I(input)$ yielding $output$ by the proof of correctness of the transformation function.
+And by the proof of the correctness of the universal \WHILE program we know that $p$-$I(input)$ yielding $output$ implies that $u(\lfloor p$-$I\rfloor \cdot input)$ yielding $output$.
+Thus we can conclude that for \wit{p} $\in$ \md{P} $n$ and \wit{input}, \wit{output} $\in$ \md{D}, $p(input)$ yielding $output$ implies $u(\lfloor p$-$I\rfloor \cdot input)$ yielding $output$ which means universal \WHILE program defined in \ref{universal-I} can simulate the \WHILE program has arbitrary variables.\\
+Thus for the proof of \wit{Halting Problem}, we can say that for \wit{p} $\in$ \md{P} $n$, \wit{h} can decide the \wit{Halting Problem} implies \wit{false}.
 
 \iffalse
 if-else8 ((hd (hd (var Cd))) =? quoteE)
