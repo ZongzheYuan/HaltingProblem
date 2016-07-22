@@ -56,10 +56,10 @@ Those computational model listed above have been proved to be \wit{Turing-equiva
 That is for $t \in$ \textbf{TM}, $input$ and $output$ $\in \Sigma^{*}$ (the set of input symbols on Kleene star\cite{jiraskova_kleene_2013}) , and $t(input)$ yields $output$, then the universal \wit{Turing Machine} $u\in$ \textbf{UTM} has the property that $u(\lfloor t\rfloor \cdot input)$ yields $output$ where $\lfloor t\rfloor$ is the code of \textit{Turing Machine} $t$.
 
 \subsection{Decidable and Non-Decidable}
-In the area of computability, a set \textbf{S} is \textbf{Recursive} (\textbf{Decidable}) $\iff$ given a set \textbf{D} and \textbf{S} $\in$ \textbf{D}, there is a function $f$ applies to the element $a \in$ \textbf{D},
+In the area of computability, a set \textbf{S} is \textbf{Recursive} (\textbf{Decidable}) $\iff$ given a set \textbf{D} and \textbf{S} $\subseteq$ \textbf{D}, there is a function $f$ applies to the element $a \in$ \textbf{D},
 $f$ will return "true" if $a \in$ \textbf{S} and $f$ will return "false" if $a \notin$ \textbf{S}\cite{jones_computability_1997}.
 \textbf{Decidable} set is closed under union, intersection, complement difference and Kleene star\cite{_recursive_2015} circumstances.\\
-A set \textbf{S} is \textbf{Recursively Enumerable} (\textbf{Semi-Decidable}) $\iff$ given a set \textbf{D} and \textbf{S} $\in$ \textbf{D}, there is a function $f$ applies to the element $a \in$ \textbf{D},
+A set \textbf{S} is \textbf{Recursively Enumerable} (\textbf{Semi-Decidable}) $\iff$ given a set \textbf{D} and \textbf{S} $\subseteq$ \textbf{D}, there is a function $f$ applies to the element $a \in$ \textbf{D},
 $f$ will return "true" if $a \in$ \textbf{S} and $f$ will return "false" or never terminate if $a \notin$ \textbf{S} which means no guarantee to terminate under the element $a \notin$ \textbf{S}\cite{jones_computability_1997}.
 If a set \textbf{S} is recursively enumerable and the implement of \textbf{S} is also recursively enumerable, then set \textbf{S} is Recursive\cite{_recursively_2015}.
 
