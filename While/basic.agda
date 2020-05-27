@@ -15,6 +15,7 @@ fst < x , y > = x
 snd : {A B : Set} → A × B → B
 snd < x , y > = y
 
+
 -- triple
 data _×_×_ (A B C : Set) : Set where
   <_,_,_> : A → B → C → A × B × C
